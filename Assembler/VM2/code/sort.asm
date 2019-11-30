@@ -1,7 +1,7 @@
 // SELECTION SORT
 
 arr: .dw 2, 4, 3, 1, 5 // inital array to sort
-max: .dw 0 // pointer to current max elemenr
+max: .dw 0 // pointer to current max element
 
 begin:
 
