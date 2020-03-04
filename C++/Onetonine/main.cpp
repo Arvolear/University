@@ -12,7 +12,7 @@ void recursion(int n, int k, int d, string ans, bool &possible)
         string tmp = "";
         int coord;
 
-        for (int i = 0; i < ans.length(); i++)
+        for (int i = 0; i < (int)ans.length(); i++)
         {
             if (int(ans[i]) >= int('0') && int(ans[i]) <= int('9'))
             {
@@ -29,11 +29,11 @@ void recursion(int n, int k, int d, string ans, bool &possible)
         tmp = "";
         
         coord++;
-        for (int i = coord; i < ans.length(); i++)
+        for (int i = coord; i < (int)ans.length(); i++)
         {
             if (ans[i] == '+' || ans[i] == '-')
             {
-                for (int j = i + 1; j < ans.length(); j++)
+                for (int j = i + 1; j < (int)ans.length(); j++)
                 {
                     if (int(ans[j]) >= int('0') && int(ans[j]) <= int('9'))
                     {
