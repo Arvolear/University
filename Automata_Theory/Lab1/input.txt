@@ -1,0 +1,1 @@
+{'key' : '.', 'val' : {'fst' : {'key' : '*', 'val' : {'key' : 'atm', 'val' : A}}, 'snd' : {'key' : '|', 'val' : {'fst' : {'key' : 'atm', 'val' : C}, 'snd' : {'key' : 'atm', 'val' : B}}}}}
