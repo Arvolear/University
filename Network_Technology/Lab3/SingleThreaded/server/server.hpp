@@ -15,7 +15,7 @@ using namespace std;
 class Server
 {
 	private:
-		int bufferSize;
+		int inputBufferSize, outputBufferSize;
 
 		int masterSocket;
 		sockaddr_in servAddr;
@@ -30,7 +30,7 @@ class Server
 		void disconnect(int id);
 
 	public:
-		Server(int port, int bufferSize = 100);
+		Server(int port, int inputBufferSize = 1000, int outputBufferSize = 1000);
 
 		void checkNewConnections();
 		void answer();

@@ -1,8 +1,9 @@
 #include "client.hpp"
 
-Client::Client(string serverIP, int serverPort, int bufferSize)
+Client::Client(string serverIP, int serverPort, int inputBufferSize, int outputBufferSize)
 {
-	this->bufferSize = bufferSize;
+	this->inputBufferSize = inputBufferSize;
+	this->outputBufferSize = outputBufferSize;
 
 	sock = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -25,9 +26,19 @@ Client::Client(string serverIP, int serverPort, int bufferSize)
 
 void Client::sendMessage(const string &message)
 {
-	string msg = to_string(message.length()) + '\n' + message;
+	string msg = to_string(message.length()) + '\n' + message;	
+	string tmp = "";
 
-	send(sock, msg.data(), msg.length(), 0);
+	for (size_t i = 0; i < msg.length(); i++)
+	{
+		tmp += msg[i];
+
+		if ((i + 1) % outputBufferSize == 0 || i == msg.length() - 1)
+		{
+			send(sock, tmp.data(), tmp.length(), 0);
+			tmp = "";
+		}
+	}
 }
 
 string Client::getMessage()
@@ -40,10 +51,10 @@ string Client::getMessage()
 	while (true)
 	{
 		bool esc = false;
-		char buffer[bufferSize];
+		char buffer[inputBufferSize];
 		char* pt = buffer;
 
-		int bytesRead = recv(sock, buffer, bufferSize, 0);
+		int bytesRead = recv(sock, buffer, inputBufferSize, 0);
 
 		for (; pt <= &buffer[bytesRead - 1]; pt++)
 		{
@@ -73,10 +84,10 @@ string Client::getMessage()
 
 	while ((int)message.length() < msgLength)
 	{
-		char buffer[bufferSize];
+		char buffer[inputBufferSize];
 		char* pt = buffer;
 
-		int bytesRead = recv(sock, buffer, bufferSize, 0);
+		int bytesRead = recv(sock, buffer, inputBufferSize, 0);
 		
 		for (; pt <= &buffer[bytesRead - 1]; pt++)
 		{

@@ -1,8 +1,9 @@
 #include "server.hpp"
 
-Server::Server(int port, int bufferSize)
+Server::Server(int port, int inputBufferSize, int outputBufferSize)
 {
-	this->bufferSize = bufferSize;
+	this->inputBufferSize = inputBufferSize;
+	this->outputBufferSize = outputBufferSize;
 
 	masterSocket = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -55,7 +56,11 @@ void Server::checkNewConnections()
 			}
 		}
 
+		unique_lock < mutex > lk(writeMtx);
+
 		cout << "New client connected: " << inet_ntoa(cliAddr.sin_addr) << ":" << ntohs(cliAddr.sin_port) << endl;
+
+		lk.unlock();
 
 		if (emptyInd == -1)
 		{
@@ -72,6 +77,8 @@ void Server::checkNewConnections()
 
 void Server::disconnect(int id)
 {
+	unique_lock < mutex > lk(writeMtx);
+
 	cout << "Client disconnected: " << inet_ntoa(clientsInfo[id].sin_addr) << ":" << ntohs(clientsInfo[id].sin_port) << endl;
 
 	close(clients[id]);
@@ -88,14 +95,13 @@ string Server::getMessage(int clientSocket, int id)
 	while (true)
 	{
 		bool esc = false;
-		char buffer[bufferSize];
+		char buffer[inputBufferSize];
 		char* pt = buffer;
 
-		int bytesRead = recv(clientSocket, buffer, bufferSize, 0);
+		int bytesRead = recv(clientSocket, buffer, inputBufferSize, 0);
 
 		if (bytesRead == 0)
 		{
-			disconnect(id);
 			throw(runtime_error("disconnect"));
 		}
 
@@ -127,14 +133,13 @@ string Server::getMessage(int clientSocket, int id)
 
 	while ((int)message.length() < msgLength)
 	{
-		char buffer[bufferSize];
+		char buffer[inputBufferSize];
 		char* pt = buffer;
 
-		int bytesRead = recv(clientSocket, buffer, bufferSize, 0);
+		int bytesRead = recv(clientSocket, buffer, inputBufferSize, 0);
 
 		if (bytesRead == 0)
 		{
-			disconnect(id);
 			throw(runtime_error("disconnect"));
 		}
 
@@ -149,36 +154,59 @@ string Server::getMessage(int clientSocket, int id)
 
 void Server::displayMessage(const string &msg, int id)
 {
+	unique_lock < mutex > lk(writeMtx);
+
 	cout << "Message from: " << inet_ntoa(clientsInfo[id].sin_addr) << ":" << ntohs(clientsInfo[id].sin_port) << endl;
 	cout << msg << endl;
 }
 
 void Server::sendMessage(int id, const string &message)
 {		
-	string msg = to_string(message.length()) + '\n' + message;
+	string msg = to_string(message.length()) + '\n' + message;	
+	string tmp = "";
 
-	send(clients[id], msg.data(), msg.length(), 0);
+	for (size_t i = 0; i < msg.length(); i++)
+	{
+		tmp += msg[i];
+
+		if ((i + 1) % outputBufferSize == 0 || i == msg.length() - 1)
+		{
+			send(clients[id], tmp.data(), tmp.length(), 0);
+			tmp = "";
+		}
+	}
 }
 
 void Server::answer()
 {
+	vector < thread > clientThreads;
+
 	for (size_t i = 0; i < clients.size(); i++)
 	{
 		if (FD_ISSET(clients[i], &readfds))
 		{
-			string message = "";
+			clientThreads.push_back(thread([this, i]()
+					{
+						string message = "";
 
-			try
-			{
-				message = getMessage(clients[i], i);
-				displayMessage(message, i);
-			}
-			catch (exception &ex) 
-			{
-			}
+						try
+						{
+							message = getMessage(clients[i], i);
+							displayMessage(message, i);
+						}
+						catch (exception &ex) 
+						{
+							disconnect(i);
+						}
 
-			sendMessage(i, message);
+						sendMessage(i, message);
+					}));
 		}
+	}
+
+	for (size_t i = 0; i < clientThreads.size(); i++)
+	{
+		clientThreads[i].detach();
 	}
 }
 

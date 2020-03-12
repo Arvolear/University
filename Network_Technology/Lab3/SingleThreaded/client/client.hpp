@@ -14,7 +14,7 @@ using namespace std;
 class Client
 {
 	private:
-		int bufferSize;
+		int inputBufferSize, outputBufferSize;
 
 		int sock;
 		sockaddr_in servAddr;
@@ -23,7 +23,7 @@ class Client
 		string getMessage();
 
 	public:
-		Client(string serverIP, int serverPort, int bufferSize = 1000);
+		Client(string serverIP, int serverPort, int inputufferSize = 1000, int outputBufferSize = 1000);
 
 		void sendMessage(const string &message);
 		void receiveMessage();

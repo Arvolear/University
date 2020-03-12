@@ -1,8 +1,9 @@
 #include "server.hpp"
 
-Server::Server(int port, int bufferSize)
+Server::Server(int port, int inputBufferSize, int outputBufferSize)
 {
-	this->bufferSize = bufferSize;
+	this->inputBufferSize = inputBufferSize;
+	this->outputBufferSize = outputBufferSize;
 
 	masterSocket = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -85,10 +86,10 @@ string Server::getMessage(int clientSocket, int id)
 	while (true)
 	{
 		bool esc = false;
-		char buffer[bufferSize];
+		char buffer[inputBufferSize];
 		char* pt = buffer;
 
-		int bytesRead = recv(clientSocket, buffer, bufferSize, 0);
+		int bytesRead = recv(clientSocket, buffer, inputBufferSize, 0);
 
 		if (bytesRead == 0)
 		{
@@ -124,10 +125,10 @@ string Server::getMessage(int clientSocket, int id)
 
 	while ((int)message.length() < msgLength)
 	{
-		char buffer[bufferSize];
+		char buffer[inputBufferSize];
 		char* pt = buffer;
 
-		int bytesRead = recv(clientSocket, buffer, bufferSize, 0);
+		int bytesRead = recv(clientSocket, buffer, inputBufferSize, 0);
 		
 		if (bytesRead == 0)
 		{
@@ -152,9 +153,19 @@ void Server::displayMessage(const string &msg, int id)
 
 void Server::sendMessage(int id, const string &message)
 {		
-	string msg = to_string(message.length()) + '\n' + message;
+	string msg = to_string(message.length()) + '\n' + message;	
+	string tmp = "";
 
-	send(clients[id], msg.data(), msg.length(), 0);
+	for (size_t i = 0; i < msg.length(); i++)
+	{
+		tmp += msg[i];
+
+		if ((i + 1) % outputBufferSize == 0 || i == msg.length() - 1)
+		{
+			send(clients[id], tmp.data(), tmp.length(), 0);
+			tmp = "";
+		}
+	}
 }
 
 void Server::answer()

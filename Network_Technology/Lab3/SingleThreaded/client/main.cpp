@@ -7,7 +7,7 @@ using namespace std;
 
 int main()
 {
-	Client *cli = new Client("127.0.0.1", 5040);
+	Client *cli = new Client("127.0.0.1", 5040, 5, 10);
 
 	while (true)
 	{
@@ -16,7 +16,7 @@ int main()
 		string msg;
 
 		cout << "Enter your message please:" << endl;
-		cin >> msg;
+		getline(cin, msg);
 
 		cli->sendMessage(msg);
 		cli->receiveMessage();

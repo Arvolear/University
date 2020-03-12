@@ -10,13 +10,15 @@
 #include <string>
 #include <algorithm>
 #include <vector>
+#include <thread>
+#include <mutex>
 
 using namespace std;
 
 class Server
 {
 	private:
-		int bufferSize;
+		int inputBufferSize, outputBufferSize;
 
 		int masterSocket;
 		sockaddr_in servAddr;
@@ -26,6 +28,8 @@ class Server
 
 		vector < int > clients;
 		vector < sockaddr_in > clientsInfo; 
+
+		mutex writeMtx;
 
 		string getMessage(int clientSocket, int id);
 		void displayMessage(const string &msg, int id);
@@ -37,7 +41,7 @@ class Server
 		void answer();
 
 	public:
-		Server(int port, int bufferSize = 100);
+		Server(int port, int inputBufferSize = 100, int outputBufferSize = 100);
 
 		void checkActivity(int timeToWait = 200);
 
