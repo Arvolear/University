@@ -13,7 +13,11 @@ class InputShower
 	private Interface inter;
 	
 	private JPanel inputPanel;
+	private JScrollPane scrollPane;
 	private JTable inputTable;
+
+	private JPanel labelPanel;
+	private JLabel inputLabel;
 
 	InputShower(Solver solver, Interface inter)
 	{
@@ -29,20 +33,48 @@ class InputShower
 		int height = (int)inter.getRenderSize().getHeight() / 2;
 
 		inputPanel = new JPanel(new BorderLayout());
-		inputPanel.setBounds(width, height / 4, width, height / 2);
+		labelPanel = new JPanel(new BorderLayout());
+
+		inputPanel.setBounds(width - width / 16, height / 4, width, height / 2);
+		labelPanel.setBounds(width - width / 16, 0, width, height / 4);
 
 		inputPanel.setOpaque(false);
 		inputPanel.setVisible(true);
 
+		labelPanel.setOpaque(false);
+		labelPanel.setVisible(true);
+
 		inputTable = new JTable();
+		inputTable.setModel(new DefaultTableModel(20, 20)
+							{
+								@Override
+								public boolean isCellEditable(int row, int column) 
+								{
+									return false;
+								}
+							});
+
 		
 		inputTable.setBackground(new Color(30, 30, 30));
         inputTable.setForeground(new Color(230, 230, 230));
 
+		inputTable.setTableHeader(null);
 		inputTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 
-		inputPanel.add(inputTable, BorderLayout.CENTER);
+		scrollPane = new JScrollPane(inputTable);
+		scrollPane.getViewport().setBackground(new Color(30, 30, 30));
+		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 
+		inputPanel.add(scrollPane, BorderLayout.CENTER);
+
+		inputLabel = new JLabel("Problem Input");
+		inputLabel.setBackground(new Color(100, 100, 100));
+		inputLabel.setForeground(new Color(230, 230, 230));
+		inputLabel.setFont(new Font("Serif", Font.PLAIN, height / 12));
+
+		labelPanel.add(inputLabel, BorderLayout.CENTER);
+
+		inter.add(labelPanel);
 		inter.add(inputPanel);
 	}
 
@@ -56,6 +88,14 @@ class InputShower
 			tableColums[i] = i;
 		}	
 
-		inputTable.setModel(new DefaultTableModel(tableInfo, tableColums));
+		inputTable.setModel(new DefaultTableModel(tableInfo, tableColums)
+							{
+								@Override
+								public boolean isCellEditable(int row, int column) 
+								{
+									return false;
+								}
+
+							});
 	}
 }

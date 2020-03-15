@@ -34,7 +34,7 @@ class ProblemChooser implements ActionListener
 		int height = (int)inter.getRenderSize().getHeight() / 4;
 
 		openPanel = new JPanel(new BorderLayout());
-		openPanel.setBounds(width / 2, height / 2, width, height);
+		openPanel.setBounds(width / 2 - width / 12, height / 2, width, height);
 
 		openPanel.setOpaque(false);
 		openPanel.setVisible(true);

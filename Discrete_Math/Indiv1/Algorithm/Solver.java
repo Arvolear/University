@@ -2,6 +2,7 @@ package Algorithm;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Collections;
 
 public class Solver
 {
@@ -31,27 +32,12 @@ public class Solver
 	private int dummyProducer; 
 	private int dummyConsumer;
 
+	private boolean loaded;
+
 	public Solver() 
 	{
 		dummyProducer = 0;
 		dummyConsumer = 0;
-	}
-
-	public void load(String path)
-	{
-		Loader loader = new Loader(path);
-	
-		try
-		{
-			loader.load();
-		}
-		catch (Exception ex)
-		{
-		}
-
-		weights = loader.getWeights();
-		producers = loader.getProducers();
-		consumers = loader.getConsumers();
 
 		solution = new ArrayList<>();
 
@@ -59,8 +45,32 @@ public class Solver
 
 		producersPotentials = new ArrayList<>();
 		consumersPotentials = new ArrayList<>();
+
+		producers = new ArrayList<>();
+		consumers = new ArrayList<>();
+
+		loaded = false;
 	}
-	
+
+	public void load(String path)
+	{
+		Loader loader = new Loader(path);
+
+		try
+		{
+			loader.load();
+
+			weights = loader.getWeights();
+			producers = loader.getProducers();
+			consumers = loader.getConsumers();
+
+			loaded = true;
+		}
+		catch (Exception ex)
+		{
+		}
+	}
+
 	private void fixOpened()
 	{
 		double consumersTotal = 0;
@@ -114,32 +124,33 @@ public class Solver
 		{
 			localProducers.add(0.0);
 		}
-			
+
 		for (int j = 0; j < weights.get(0).size(); j++)
 		{
 			localConsumers.add(0.0);
 		}
-			
+
 		for (int i = 0; i < weights.size(); i++)
 		{
 			ArrayList < Double > tmp = new ArrayList<>();
-		
+
 			for (int j = 0; j < weights.get(i).size(); j++)
 			{
 				double toAdd = Math.max(0, Math.min(consumers.get(j) - localConsumers.get(j), producers.get(i) - localProducers.get(i)));
-				
+
 				tmp.add(toAdd);
 
 				localProducers.set(i, localProducers.get(i) + toAdd);
 				localConsumers.set(j, localConsumers.get(j) + toAdd);
 			}
-			
+
 			solution.add(tmp);
 		}
 	}
 
 	private enum Direction
 	{
+		NONE,
 		UP, 
 		LEFT,
 		HORIZONTAL,
@@ -152,6 +163,13 @@ public class Solver
 		int col;
 
 		Direction dir;
+
+		BFSNode(int row, int col)
+		{
+			this.row = row;
+			this.col = col;
+			this.dir = Direction.NONE;
+		}
 
 		BFSNode(int row, int col, Direction dir)
 		{
@@ -168,6 +186,10 @@ public class Solver
 		producersPotentials.clear();
 		consumersPotentials.clear();
 
+		ArrayList < Node > randomElems = new ArrayList<>();
+
+		int toAdd = producers.size() + consumers.size() - 1;
+
 		for (int i = 0; i < solution.size(); i++)
 		{
 			ArrayList < Pair < Double, Boolean > > tmp = new ArrayList<>();
@@ -177,89 +199,136 @@ public class Solver
 				if (solution.get(i).get(j) > 0.0)
 				{
 					tmp.add(new Pair<>(weights.get(i).get(j), true));	
+					toAdd--;
 				}
 				else
 				{
 					tmp.add(new Pair<>(0.0, false));
+					randomElems.add(new Node(i, j));
 				}
 			}
-			
+
 			potentialsTable.add(tmp);
 		}
-		
-		ArrayList < Boolean > producersUsedPotentials = new ArrayList<>();
-		ArrayList < Boolean > consumersUsedPotentials = new ArrayList<>();
-	
-		for (int i = 0; i < weights.size(); i++)
-		{
-			producersPotentials.add(0.0);
-			producersUsedPotentials.add(false);
-		}
-			
-		for (int j = 0; j < weights.get(0).size(); j++)
-		{
-			consumersPotentials.add(0.0);
-			consumersUsedPotentials.add(false);
-		}
 
-		LinkedList < BFSNode > queue = new LinkedList<>();
-		
-		queue.add(new BFSNode(potentialsTable.size() - 1, potentialsTable.get(0).size() - 1, Direction.UP));
-
-		while (!queue.isEmpty())
+		while (true)
 		{
-			// first <----------------- last queue
-			BFSNode node = queue.pollFirst();
+			Collections.shuffle(randomElems);
 
-			switch (node.dir)
+			ArrayList < Boolean > producersUsedPotentials = new ArrayList<>();
+			ArrayList < Boolean > consumersUsedPotentials = new ArrayList<>();
+
+			for (int i = 0; i < weights.size(); i++)
 			{
-				case UP:
+				producersPotentials.add(0.0);
+				producersUsedPotentials.add(false);
+			}
+
+			for (int j = 0; j < weights.get(0).size(); j++)
+			{
+				consumersPotentials.add(0.0);
+				consumersUsedPotentials.add(false);
+			}
+
+			for (int i = 0; i < toAdd; i++)
+			{
+				potentialsTable.get(randomElems.get(i).row).set(randomElems.get(i).col, new Pair<>(0.0, true));
+			}
+
+			LinkedList < BFSNode > queue = new LinkedList<>();
+
+			queue.add(new BFSNode(potentialsTable.size() - 1, potentialsTable.get(0).size() - 1, Direction.UP));
+
+			while (!queue.isEmpty())
+			{
+				// first <----------------- last queue
+				BFSNode node = queue.pollFirst();
+
+				switch (node.dir)
 				{
-					for (int i = node.row; i >= 0; i--)
-					{
-						double cell = potentialsTable.get(i).get(node.col).first;
-						boolean partOfWeight = potentialsTable.get(i).get(node.col).second;
-
-						if (partOfWeight)
+					case UP:
 						{
-							double knownPotential = consumersPotentials.get(node.col);
-
-							if (!producersUsedPotentials.get(i))
+							for (int i = potentialsTable.size() - 1; i >= 0; i--)
 							{
-								producersPotentials.set(i, cell - knownPotential);
+								double cell = potentialsTable.get(i).get(node.col).first;
+								boolean partOfWeight = potentialsTable.get(i).get(node.col).second;
 
-								producersUsedPotentials.set(i, true);
-								queue.add(new BFSNode(i, node.col, Direction.LEFT));
+								if (partOfWeight)
+								{
+									double knownPotential = consumersPotentials.get(node.col);
+
+									if (!producersUsedPotentials.get(i))
+									{
+										producersPotentials.set(i, cell - knownPotential);
+
+										producersUsedPotentials.set(i, true);
+										queue.add(new BFSNode(i, node.col, Direction.LEFT));
+									}
+								}
 							}
-						}
-					}
 
+							break;
+						}
+
+					case LEFT:
+						{
+							for (int j = potentialsTable.get(0).size() - 1; j >= 0; j--)
+							{
+								double cell = potentialsTable.get(node.row).get(j).first;
+								boolean partOfWeight = potentialsTable.get(node.row).get(j).second;
+
+								if (partOfWeight)
+								{
+									double knownPotential = producersPotentials.get(node.row);
+
+									if (!consumersUsedPotentials.get(j))
+									{
+										consumersPotentials.set(j, cell - knownPotential);
+
+										consumersUsedPotentials.set(j, true);
+										queue.add(new BFSNode(node.row, j, Direction.UP));
+									}
+								}
+							}
+
+							break;
+						}
+				}
+			}
+
+			boolean shallBreak = true;
+
+			for (int i = 0; i < producersUsedPotentials.size(); i++)
+			{
+				if (!producersUsedPotentials.get(i))
+				{
+					shallBreak = false;
 					break;
 				}
+			}
 
-				case LEFT:
+			if (shallBreak)
+			{
+				for (int i = 0; i < consumersUsedPotentials.size(); i++)
 				{
-					for (int j = node.col; j >= 0; j--)
+					if (!consumersUsedPotentials.get(i))
 					{
-						double cell = potentialsTable.get(node.row).get(j).first;
-						boolean partOfWeight = potentialsTable.get(node.row).get(j).second;
-
-						if (partOfWeight)
-						{
-							double knownPotential = producersPotentials.get(node.row);
-
-							if (!consumersUsedPotentials.get(j))
-							{
-								consumersPotentials.set(j, cell - knownPotential);
-
-								consumersUsedPotentials.set(j, true);
-								queue.add(new BFSNode(node.row, j, Direction.UP));
-							}
-						}
+						shallBreak = false;
+						break;
 					}
-
-					break;
 				}
+			}
+
+			if (!shallBreak)
+			{
+				for (int i = 0; i < toAdd; i++)
+				{
+					potentialsTable.get(randomElems.get(i).row).set(randomElems.get(i).col, new Pair<>(0.0, false));
+				}	
+			}
+			else
+			{
+				break;
 			}
 		}
 
@@ -282,6 +351,13 @@ public class Solver
 
 		double val;
 
+		Node(int row, int col)
+		{
+			this.row = row;
+			this.col = col;
+			this.val = 0.0;
+		}
+
 		Node(int row, int col, double val)
 		{
 			this.row = row;
@@ -298,86 +374,86 @@ public class Solver
 		switch (dir)
 		{
 			case HORIZONTAL:
-			{
-				if (cur.col != start.col && cur.row == start.row && path.size() > 3)
 				{
-					// path is found
-					return true;
-				}
-
-				for (int j = 0; j < colsAmount.size(); j++)
-				{
-					// also checks for used
-					if (potentialsTable.get(cur.row).get(j).second)
+					if (cur.col != start.col && cur.row == start.row && path.size() > 3)
 					{
-						if (rowsAmount.get(cur.row) < 2 && colsAmount.get(j) < 2)
+						// path is found
+						return true;
+					}
+
+					for (int j = 0; j < colsAmount.size(); j++)
+					{
+						// also checks for used
+						if (potentialsTable.get(cur.row).get(j).second)
 						{
-							potentialsTable.get(cur.row).set(j, new Pair<>(potentialsTable.get(cur.row).get(j).first, false)); 
-
-							rowsAmount.set(cur.row, rowsAmount.get(cur.row) + 1);
-							colsAmount.set(j, colsAmount.get(j) + 1);
-
-							path.add(new Node(cur.row, j, -cur.val));
-							
-							// recursive call
-							if (findPath(Direction.VERTICAL, path, rowsAmount, colsAmount))
+							if (rowsAmount.get(cur.row) < 2 && colsAmount.get(j) < 2)
 							{
-								return true;
+								potentialsTable.get(cur.row).set(j, new Pair<>(potentialsTable.get(cur.row).get(j).first, false)); 
+
+								rowsAmount.set(cur.row, rowsAmount.get(cur.row) + 1);
+								colsAmount.set(j, colsAmount.get(j) + 1);
+
+								path.add(new Node(cur.row, j, -cur.val));
+
+								// recursive call
+								if (findPath(Direction.VERTICAL, path, rowsAmount, colsAmount))
+								{
+									return true;
+								}
+
+								potentialsTable.get(cur.row).set(j, new Pair<>(potentialsTable.get(cur.row).get(j).first, true)); 
+
+								rowsAmount.set(cur.row, rowsAmount.get(cur.row) - 1);
+								colsAmount.set(j, colsAmount.get(j) - 1);
+
+								path.remove(path.size() - 1);
 							}
-
-							potentialsTable.get(cur.row).set(j, new Pair<>(potentialsTable.get(cur.row).get(j).first, true)); 
-
-							rowsAmount.set(cur.row, rowsAmount.get(cur.row) - 1);
-							colsAmount.set(j, colsAmount.get(j) - 1);
-
-							path.remove(path.size() - 1);
 						}
 					}
-				}
 
-				break;
-			}
+					break;
+				}
 
 			case VERTICAL:
-			{	
-				if (cur.row != start.row && cur.col == start.col && path.size() > 3)
-				{
-					// path is found
-					return true;
-				}
-
-				for (int i = 0; i < rowsAmount.size(); i++)
-				{
-					// also checks for used
-					if (potentialsTable.get(i).get(cur.col).second)
+				{	
+					if (cur.row != start.row && cur.col == start.col && path.size() > 3)
 					{
-						if (rowsAmount.get(i) < 2 && colsAmount.get(cur.col) < 2)
+						// path is found
+						return true;
+					}
+
+					for (int i = 0; i < rowsAmount.size(); i++)
+					{
+						// also checks for used
+						if (potentialsTable.get(i).get(cur.col).second)
 						{
-							potentialsTable.get(i).set(cur.col, new Pair<>(potentialsTable.get(i).get(cur.col).first, false)); 
-
-							rowsAmount.set(i, rowsAmount.get(i) + 1);
-							colsAmount.set(cur.col, colsAmount.get(cur.col) + 1);
-
-							path.add(new Node(i, cur.col, -cur.val));
-							
-							// recursive call
-							if (findPath(Direction.HORIZONTAL, path, rowsAmount, colsAmount))
+							if (rowsAmount.get(i) < 2 && colsAmount.get(cur.col) < 2)
 							{
-								return true;
+								potentialsTable.get(i).set(cur.col, new Pair<>(potentialsTable.get(i).get(cur.col).first, false)); 
+
+								rowsAmount.set(i, rowsAmount.get(i) + 1);
+								colsAmount.set(cur.col, colsAmount.get(cur.col) + 1);
+
+								path.add(new Node(i, cur.col, -cur.val));
+
+								// recursive call
+								if (findPath(Direction.HORIZONTAL, path, rowsAmount, colsAmount))
+								{
+									return true;
+								}
+
+								potentialsTable.get(i).set(cur.col, new Pair<>(potentialsTable.get(i).get(cur.col).first, true)); 
+
+								rowsAmount.set(i, rowsAmount.get(i) - 1);
+								colsAmount.set(cur.col, colsAmount.get(cur.col) - 1);
+
+								path.remove(path.size() - 1);
 							}
-
-							potentialsTable.get(i).set(cur.col, new Pair<>(potentialsTable.get(i).get(cur.col).first, true)); 
-
-							rowsAmount.set(i, rowsAmount.get(i) - 1);
-							colsAmount.set(cur.col, colsAmount.get(cur.col) - 1);
-
-							path.remove(path.size() - 1);
 						}
 					}
-				}
 
-				break;
-			}
+					break;
+				}
 		}
 
 		return false;
@@ -411,7 +487,7 @@ public class Solver
 			// can't optimize
 			return false;
 		}
-	 
+
 		Node start = new Node(minNode.row, minNode.col, 1.0);
 
 		ArrayList < Integer > rowsAmount = new ArrayList<>();
@@ -421,22 +497,22 @@ public class Solver
 		{
 			rowsAmount.add(0);
 		}
-			
+
 		for (int j = 0; j < weights.get(0).size(); j++)
 		{
 			colsAmount.add(0);
 		}
-		
+
 		rowsAmount.set(start.row, 1);
 		colsAmount.set(start.col, 1);
 
 		ArrayList < Node > path = new ArrayList<>();
 		path.add(start);
-		
+
 		findPath(Direction.HORIZONTAL, path, rowsAmount, colsAmount);	
-		
+
 		double minValue = Double.MAX_VALUE;
-		
+
 		for (int i = 0; i < path.size(); i++)
 		{
 			// find MIN -
@@ -465,13 +541,18 @@ public class Solver
 
 	public void solve()
 	{
+		if (!loaded)
+		{
+			return;
+		}
+
 		fixOpened();
 		findBaseSolution();
 
 		while (true)
 		{
 			findPotentials();
-			
+
 			if (!tryOptimize())
 			{
 				break;
@@ -487,10 +568,10 @@ public class Solver
 			{
 				System.out.printf("%10.2f ", solution.get(i).get(j));
 			}
-				
+
 			System.out.printf("%10.2f\n", producers.get(i));
 		}
-		
+
 		for (int i = 0; i < consumers.size() - dummyConsumer; i++)
 		{
 			System.out.printf("%10.2f ", consumers.get(i));
@@ -499,9 +580,32 @@ public class Solver
 		System.out.println();
 	}
 
-	public void getSolution()
+	public Object[][] getSolution()
 	{
-		
+		Object result[][] = new Object[solution.size() + 1][];
+
+		for (int i = 0; i < solution.size(); i++)
+		{
+			Object objs[] = new Object[solution.get(i).size() + 1];
+
+			for (int j = 0; j < solution.get(i).size(); j++)
+			{
+				objs[j] = solution.get(i).get(j);
+			}
+
+			objs[objs.length - 1] = producers.get(i);
+
+			result[i] = objs;
+		}
+
+		result[result.length - 1] = new Object[consumers.size() + 1];
+
+		for (int i = 0; i < consumers.size(); i++)
+		{
+			result[result.length - 1][i] = consumers.get(i);
+		}
+
+		return result;
 	}
 
 	public Object[][] getInput()
@@ -521,7 +625,7 @@ public class Solver
 
 			result[i] = objs;
 		}
-		
+
 		result[result.length - 1] = new Object[consumers.size() + 1];
 
 		for (int i = 0; i < consumers.size(); i++)
@@ -530,5 +634,20 @@ public class Solver
 		}
 
 		return result;
+	}
+
+	public double getF()
+	{
+		double res = 0.0;
+
+		for (int i = 0; i < solution.size(); i++)
+		{
+			for (int j = 0; j < solution.get(i).size(); j++)
+			{
+				res += solution.get(i).get(j) * weights.get(i).get(j);
+			}
+		}
+
+		return res;
 	}
 }

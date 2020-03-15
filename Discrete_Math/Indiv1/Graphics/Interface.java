@@ -14,6 +14,9 @@ public class Interface extends JPanel
 	private ProblemChooser prolemChooser;
 	private InputShower inputShower;
 
+	private Solutor solutor;
+	private SolutionShower solutionShower;
+
 	private Solver solver;
 
 	public Interface()
@@ -36,6 +39,9 @@ public class Interface extends JPanel
 
 		inputShower = new InputShower(solver, this);
 		prolemChooser = new ProblemChooser(solver, this, inputShower);
+
+		solutionShower = new SolutionShower(solver, this);
+		solutor = new Solutor(solver, this, solutionShower);
 		
 		frame.add(this);
 		
