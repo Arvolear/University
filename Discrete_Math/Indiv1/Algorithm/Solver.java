@@ -503,4 +503,32 @@ public class Solver
 	{
 		
 	}
+
+	public Object[][] getInput()
+	{
+		Object result[][] = new Object[weights.size() + 1][];
+
+		for (int i = 0; i < weights.size(); i++)
+		{
+			Object objs[] = new Object[weights.get(i).size() + 1];
+
+			for (int j = 0; j < weights.get(i).size(); j++)
+			{
+				objs[j] = weights.get(i).get(j);
+			}
+
+			objs[objs.length - 1] = producers.get(i);
+
+			result[i] = objs;
+		}
+		
+		result[result.length - 1] = new Object[consumers.size() + 1];
+
+		for (int i = 0; i < consumers.size(); i++)
+		{
+			result[result.length - 1][i] = consumers.get(i);
+		}
+
+		return result;
+	}
 }
