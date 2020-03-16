@@ -57,12 +57,21 @@ class ProblemChooser implements ActionListener
 
 		JFileChooser fileChooser = new JFileChooser(name);
 
+		SwingUtilities.updateComponentTreeUI(fileChooser);
+
 		int result = fileChooser.showOpenDialog(null);
 
 		if (result == JFileChooser.APPROVE_OPTION)
 		{
-			solver.load(fileChooser.getSelectedFile().getAbsolutePath());
-			inputShower.displayInput();
+			try
+			{
+				solver.load(fileChooser.getSelectedFile().getAbsolutePath());
+				inputShower.displayInput();
+			}
+			catch (Exception ex)
+			{
+				JOptionPane.showMessageDialog(inter.getFrame(), "Invalid file format!", "Error", JOptionPane.ERROR_MESSAGE);
+			}
 		}
 	}
 }

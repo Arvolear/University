@@ -5,6 +5,7 @@ import Algorithm.*;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.table.*;
+import javax.swing.plaf.basic.*;
 
 class InputShower
 {
@@ -64,6 +65,31 @@ class InputShower
 		scrollPane = new JScrollPane(inputTable);
 		scrollPane.getViewport().setBackground(new Color(30, 30, 30));
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
+		scrollPane.getVerticalScrollBar().setBackground(new Color(30, 30, 30));
+		scrollPane.getHorizontalScrollBar().setBackground(new Color(30, 30, 30));
+
+		JPanel cornerPanel = new JPanel();
+		cornerPanel.setBackground(new Color(30, 30, 30));
+
+		scrollPane.setCorner(JScrollPane.LOWER_RIGHT_CORNER, cornerPanel);
+
+		scrollPane.getVerticalScrollBar().setUI(new BasicScrollBarUI() 
+												{
+												    @Override
+												    protected void configureScrollBarColors() 
+													{
+											        	this.thumbColor = new Color(100, 100, 100);
+							    					}
+												});
+
+		scrollPane.getHorizontalScrollBar().setUI(new BasicScrollBarUI() 
+												{
+												    @Override
+												    protected void configureScrollBarColors() 
+													{
+											        	this.thumbColor = new Color(100, 100, 100);
+							    					}
+												});
 
 		inputPanel.add(scrollPane, BorderLayout.CENTER);
 
@@ -89,13 +115,13 @@ class InputShower
 		}	
 
 		inputTable.setModel(new DefaultTableModel(tableInfo, tableColums)
-							{
-								@Override
-								public boolean isCellEditable(int row, int column) 
-								{
-									return false;
-								}
+				{
+				@Override
+				public boolean isCellEditable(int row, int column) 
+				{
+				return false;
+				}
 
-							});
+				});
 	}
 }

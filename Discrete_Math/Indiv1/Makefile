@@ -1,5 +1,5 @@
 Algorithm = Loader.class Solver.class 
-Graphics = Interface.class ProblemChooser.class InputShower.class Solutor.class SolutionShower.class
+Graphics = Interface.class ProblemChooser.class InputShower.class Solutor.class SolutionShower.class Menu.class
 
 CLASSES = Main.class $(addprefix Algorithm/, $(Algorithm)) $(addprefix Graphics/, $(Graphics))
 
@@ -34,6 +34,9 @@ Graphics/Solutor.class: Graphics/Solutor.java
 
 Graphics/SolutionShower.class: Graphics/SolutionShower.java
 	javac Graphics/SolutionShower.java
+
+Graphics/Menu.class: Graphics/Menu.java
+	javac Graphics/Menu.java
 
 clean:
 	rm -rf ./Main.class

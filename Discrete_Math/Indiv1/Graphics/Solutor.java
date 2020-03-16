@@ -49,8 +49,14 @@ class Solutor implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent event)
 	{
-		solver.solve();
-
-		solutionShower.displaySolution();
+		try
+		{
+			solver.solve();
+			solutionShower.displaySolution();
+		}
+		catch (Exception ex)
+		{
+			JOptionPane.showMessageDialog(inter.getFrame(), "Load a valid file first!", "Error", JOptionPane.ERROR_MESSAGE);
+		}
 	}
 }

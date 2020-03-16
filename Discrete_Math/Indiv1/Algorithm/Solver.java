@@ -32,8 +32,6 @@ public class Solver
 	private int dummyProducer; 
 	private int dummyConsumer;
 
-	private boolean loaded;
-
 	public Solver() 
 	{
 		dummyProducer = 0;
@@ -48,27 +46,17 @@ public class Solver
 
 		producers = new ArrayList<>();
 		consumers = new ArrayList<>();
-
-		loaded = false;
 	}
 
-	public void load(String path)
+	public void load(String path) throws Exception
 	{
 		Loader loader = new Loader(path);
 
-		try
-		{
-			loader.load();
+		loader.load();
 
-			weights = loader.getWeights();
-			producers = loader.getProducers();
-			consumers = loader.getConsumers();
-
-			loaded = true;
-		}
-		catch (Exception ex)
-		{
-		}
+		weights = loader.getWeights();
+		producers = loader.getProducers();
+		consumers = loader.getConsumers();
 	}
 
 	private void fixOpened()
@@ -541,11 +529,6 @@ public class Solver
 
 	public void solve()
 	{
-		if (!loaded)
-		{
-			return;
-		}
-
 		fixOpened();
 		findBaseSolution();
 

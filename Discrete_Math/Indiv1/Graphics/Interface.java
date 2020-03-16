@@ -11,6 +11,8 @@ public class Interface extends JPanel
 	private Dimension renderSize;
 	private JFrame frame;
 
+	private Menu menu;
+
 	private ProblemChooser prolemChooser;
 	private InputShower inputShower;
 
@@ -21,6 +23,8 @@ public class Interface extends JPanel
 
 	public Interface()
 	{
+		configure();
+
 		solver = new Solver();
 
 		frame = new JFrame("Transport problem solver");
@@ -43,9 +47,46 @@ public class Interface extends JPanel
 		solutionShower = new SolutionShower(solver, this);
 		solutor = new Solutor(solver, this, solutionShower);
 		
+		menu = new Menu(frame);
 		frame.add(this);
 		
 		frame.setVisible(true);
+	}
+
+	private void configure()
+	{
+		UIManager.put("OptionPane.background", new Color(30, 30, 30));
+		UIManager.put("OptionPane.messageForeground", new Color(230, 230, 230));
+		
+		UIManager.put("Button.background", new Color(100, 100, 100));
+		UIManager.put("Button.foreground", new Color(230, 230, 230));
+
+		UIManager.put("ToggleButton.background", new Color(100, 100, 100));
+		UIManager.put("ToggleButton.foreground", new Color(230, 230, 230));
+
+		UIManager.put("ToolBar.background", new Color(30, 30, 30));
+		UIManager.put("ToolBar.foreground", new Color(230, 230, 230));
+
+		UIManager.put("Panel.background", new Color(30, 30, 30));
+		UIManager.put("Panel.foreground", new Color(230, 230, 230));
+		
+		UIManager.put("Label.background", new Color(30, 30, 30));
+		UIManager.put("Label.foreground", new Color(230, 230, 230));
+
+		UIManager.put("Viewport.background", new Color(30, 30, 30));
+		UIManager.put("Viewport.foreground", new Color(230, 230, 230));
+
+		UIManager.put("TextField.background", new Color(30, 30, 30));
+		UIManager.put("TextField.foreground", new Color(230, 230, 230));
+
+		UIManager.put("List.background", new Color(30, 30, 30));
+		UIManager.put("List.foreground", new Color(230, 230, 230));
+
+		UIManager.put("ComboBox.background", new Color(30, 30, 30));
+		UIManager.put("ComboBox.foreground", new Color(230, 230, 230));
+		
+		UIManager.put("TableHeader.background", new Color(30, 30, 30));
+		UIManager.put("TableHeader.foreground", new Color(230, 230, 230));	
 	}
 
 	@Override
@@ -60,5 +101,10 @@ public class Interface extends JPanel
 	Dimension getRenderSize()
 	{
 		return renderSize;
+	}
+
+	JFrame getFrame()
+	{
+		return frame;
 	}
 }
