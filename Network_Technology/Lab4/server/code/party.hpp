@@ -3,12 +3,17 @@
 #include "server.hpp"
 
 #include <vector>
+#include <queue>
+#include <iomanip>
+#include <sstream>
 
 class Party
 {
 	private:
 		static int globalPartyIndex;
 		int MAX_PLAYERS = 2;
+		int FIELD_SIZE = 3;
+		int TO_WIN = 3;
 	
 		/* this party index */
 		int index;
@@ -19,10 +24,13 @@ class Party
 
 		/* client id whose turn is now */
 		int current;
+		string currentSymbol;
 
 		int howManyPlayers;
 
-		vector < vector < char > > field;
+		bool finish;
+
+		vector < vector < string > > field;
 
 		// TODO deque
 		map < int, string > outputMessages;
@@ -31,6 +39,9 @@ class Party
 
 		string getBeautifulField();
 		void nextTurn();
+
+		bool isWin(int row, int col);
+		bool isValid(const string &message, int &row, int &col);
 	
 	public:
 		Party();
@@ -42,7 +53,13 @@ class Party
 		map < int, string > getMessages();
 
 		int getOtherPlayer(int id);
+
+		int getCrossPlayer();
+		int getZeroPlayer();
+
 		int getIndex();
+
+		bool shouldFinish();	
 
 		~Party();
 };

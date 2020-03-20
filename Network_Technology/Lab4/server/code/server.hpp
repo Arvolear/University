@@ -66,6 +66,11 @@ class Client
 			this->partyIndex = partyIndex;
 		}
 
+		void setType(ClientType type)
+		{
+			this->type = type;
+		}
+
 		int getID() const
 		{
 			return id;
@@ -125,6 +130,7 @@ class Server
 		map < int, Client > getOldClients();
 
 		void updateClientParty(int id, int partyIndex);
+		void updateClientType(int id, ClientType type);
 
 		void approveClients(map < int, Client > news);
 		void disconnectClients(map < int, Client > olds);

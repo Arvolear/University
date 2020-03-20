@@ -24,7 +24,7 @@ void Game::check()
 		}
 		catch (exception &ex)
 		{
-			displayMessage("You were disconnected from the server");
+			displayMessage("\nYou were disconnected from the server\n");
 			exit(0);
 		}
 	}
@@ -46,7 +46,8 @@ void Game::react()
 
 void Game::displayMessage(const string &message)
 {
-	cout << endl << message << endl;
+	cout << message;
+	cout.flush();
 }
 
 void Game::play()

@@ -10,7 +10,7 @@ void Game::check()
 	while (true)
 	{
 		this_thread::sleep_for(chrono::milliseconds(100));
-
+		
 		server->checkActivity();
 	}	
 }
@@ -19,18 +19,19 @@ void Game::processNewConnections()
 {
 	map < int, Client > newClients = server->getNewClients();
 
-	for (auto &i : newClients)
+	for (auto &clientIt : newClients)
 	{
 		bool foundEmpty = false;
 
-		for (auto &j : parties)
+		for (auto &partyIt : parties)
 		{
-			if (!j.second->isFull())
+			/* party is found */
+			if (!partyIt.second->isFull())
 			{
 				foundEmpty = true;
 
-				j.second->addPlayer(i.first);
-				server->updateClientParty(i.first, j.first);
+				partyIt.second->addPlayer(clientIt.first);
+				server->updateClientParty(clientIt.first, partyIt.first);
 
 				break;
 			}
@@ -38,12 +39,12 @@ void Game::processNewConnections()
 
 		if (!foundEmpty)
 		{
-			Party *party = new Party();
+			Party *newParty = new Party();
 
-			party->addPlayer(i.first);
-			server->updateClientParty(i.first, party->getIndex());
+			newParty->addPlayer(clientIt.first);
+			server->updateClientParty(clientIt.first, newParty->getIndex());
 
-			parties.insert({party->getIndex(), party});
+			parties.insert({newParty->getIndex(), newParty});
 		}
 	}
 		
@@ -54,25 +55,22 @@ void Game::processMessages()
 {
 	map < int, string > clientMessages = server->getClientsMessages();
 
-	for (auto &i : clientMessages)
+	/* update parties */
+	for (auto &messagesIt : clientMessages)
 	{
-		Client client = server->getClient(i.first);
-		
-		auto it = parties.find(client.getParty());
-
-		if (it != parties.end())
+		if (messagesIt.second == "QUIT")
 		{
-			it->second->receiveResponse(i.first, i.second);
+			server->updateClientType(messagesIt.first, ClientType::OLD);
+			continue;
 		}
-	}
+		
+		Client client = server->getClient(messagesIt.first);
+		
+		auto partyIt = parties.find(client.getParty());
 
-	for (auto &i : parties)
-	{
-		map < int, string > messages = i.second->getMessages();
-
-		for (auto &j : messages)
+		if (partyIt != parties.end())
 		{
-			server->sendMessage(server->getClient(j.first), j.second);
+			partyIt->second->receiveResponse(messagesIt.first, messagesIt.second);
 		}
 	}
 }
@@ -82,30 +80,60 @@ void Game::processOldConnections()
 	map < int, Client > oldClients = server->getOldClients();
 	map < int, Client > toDisconnect;
 
-	for (auto &i : oldClients)
+	for (auto &clientIt : oldClients)
 	{
-		auto it = parties.find(i.second.getParty());
+		auto partyIt = parties.find(clientIt.second.getParty());
 
-		toDisconnect.insert({i.first, i.second});
+		toDisconnect.insert({clientIt.first, clientIt.second});
 
-		if (it != parties.end())
+		if (partyIt != parties.end())
 		{
-			int other = it->second->getOtherPlayer(i.first);
+			int otherID = partyIt->second->getOtherPlayer(clientIt.first);
 
-			delete it->second;
-			parties.erase(it);
+			delete partyIt->second;
+			parties.erase(partyIt);
 
-			if (other != -1)
+			if (otherID != -1)
 			{
-				Client otherClient = server->getClient(other);
-				toDisconnect.insert({other, otherClient});
+				Client otherClient = server->getClient(otherID);
+				toDisconnect.insert({otherID, otherClient});
 
-				server->sendMessage(otherClient, "Your opponent left the game");
+				server->sendMessage(otherClient, "\nYour opponent left the game\n");
 			}
 		}
 	}
 
 	server->disconnectClients(toDisconnect);
+}
+
+void Game::processParties()
+{
+	/* update clients */
+	for (auto partyIt = parties.begin(); partyIt != parties.end();)
+	{
+		map < int, string > messages = partyIt->second->getMessages();
+
+		for (auto &messagesIt : messages)
+		{
+			server->sendMessage(server->getClient(messagesIt.first), messagesIt.second);
+		}
+		
+		if (partyIt->second->shouldFinish())
+		{
+			Client cross = server->getClient(partyIt->second->getCrossPlayer());
+			Client zero = server->getClient(partyIt->second->getZeroPlayer());
+
+			delete partyIt->second;
+			partyIt = parties.erase(partyIt);
+
+			server->disconnectClient(cross);
+			server->disconnectClient(zero);
+		}
+		else
+		{
+			++partyIt;
+		}
+	}
 }
 
 void Game::react()
@@ -115,7 +143,9 @@ void Game::react()
 		this_thread::sleep_for(chrono::milliseconds(100));
 
 		processNewConnections();
+		processParties();
 		processMessages();
+		processParties();
 		processOldConnections();
 	}	
 }

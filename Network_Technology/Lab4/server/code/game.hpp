@@ -24,6 +24,7 @@ class Game
 		void processNewConnections();
 		void processMessages();
 		void processOldConnections();
+		void processParties();
 
 	public:
 		Game();

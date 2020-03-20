@@ -387,6 +387,20 @@ void Server::updateClientParty(int id, int partyIndex)
 	it->second.setParty(partyIndex);
 }
 
+void Server::updateClientType(int id, ClientType type)
+{
+	unique_lock < mutex > clientsLk(clientsMutex);
+
+	auto it = clients.find(id);
+
+	if (it == clients.end())
+	{
+		throw(runtime_error("client not found"));
+	}
+
+	it->second.setType(ClientType::OLD);
+}
+
 void Server::approveClients(map < int, Client > news)
 {
 	unique_lock < mutex > clientsLk(clientsMutex);
