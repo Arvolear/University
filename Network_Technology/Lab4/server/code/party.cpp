@@ -287,8 +287,6 @@ void Party::receiveResponse(int id, string message)
 		return;
 	}
 
-	int prev = current;
-
 	field[row][col] = currentSymbol;
 
 	string prevMessage = "";
@@ -296,22 +294,20 @@ void Party::receiveResponse(int id, string message)
 
 	if (isWin(row, col))
 	{
-		prevMessage = getBeautifulField() + "You Won! Congratulations!\n";
-		
-		currMessage = getBeautifulField() + "You Lost, better luck next time!\n";
-
+		prevMessage = getBeautifulField() + "You Lost, better luck next time!\n";
+		currMessage = getBeautifulField() + "You Won! Congratulations!\n";	
+	
 		finish = true;
 	}
 	else
 	{
+		nextTurn();
+		
 		prevMessage = "\nOpponent turn (" + currentSymbol + ")\n" + getBeautifulField() + "Wait...\n";
-
 		currMessage = "\nYour turn (" + currentSymbol + ")\n" + getBeautifulField();
 	}
 	
-	nextTurn();
-		
-	outputMessages.insert({prev, prevMessage});
+	outputMessages.insert({getOtherPlayer(current), prevMessage});
 	outputMessages.insert({current, currMessage});
 }
 
