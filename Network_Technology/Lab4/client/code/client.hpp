@@ -6,8 +6,10 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
+#include <cstring>
 #include <iostream>
 #include <deque>
+#include <vector>
 #include <mutex>
 #include <string>
 
@@ -16,17 +18,31 @@ using namespace std;
 class Client
 {
 	private:
+		struct Message
+		{	
+			bool fine;
+			int totalLength;
+			string message;
+
+			Message()
+			{
+				this->fine = false;
+				this->totalLength = -1;
+				this->message = "";
+			}
+		};
+
 		int inputBufferSize, outputBufferSize;
 
 		int sock;
 		sockaddr_in servAddr;
 
-		deque < string > messages;
+		deque < Message > messages;
 
 		mutex serverMutex;
 
 		void log(const string &msg);
-		string getMessage();
+		void getMessage();
 
 	public:
 		Client(string serverIP, int serverPort, int inputufferSize = 100, int outputBufferSize = 100);
@@ -35,7 +51,7 @@ class Client
 		
 		void checkActivity();
 
-		string getServerMessage();
+		vector < string > getServerMessages();
 
 		~Client();
 };

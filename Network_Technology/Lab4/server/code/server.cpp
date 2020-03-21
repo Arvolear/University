@@ -97,73 +97,164 @@ void Server::markDisconnect(Client client)
 	log("Client marked", it->second.info);
 }
 
-string Server::getMessage(Client client)
+void Server::getMessage(Client client)
 {
 	int clientSocket = client.sock;
 
+	Client::Message clientMessage;
+	Client::Message clientTail;
+		
+	char buffer[inputBufferSize];
+	int bytesRead = 0;
+	int bufferInd = 0;
+	
 	string msgLen = "";
-	int msgLength = 0;
 
-	string message = "";
+	bool skip = false;
 
-	while (true)
+	/* client has incomplete MSG */
+	if (!client.messages.empty() && !client.messages[client.messages.size() - 1].fine)
 	{
-		bool esc = false;
-		char buffer[inputBufferSize];
-		char* pt = buffer;
+		string localBuffer = client.messages[client.messages.size() - 1].message;
+		bytesRead = localBuffer.size();
 
-		int bytesRead = recv(clientSocket, buffer, inputBufferSize, 0);
-
-		if (bytesRead == 0)
+		for (int i = 0; i < bytesRead; i++)
 		{
-			throw(runtime_error("disconnect"));
+			buffer[i] = localBuffer[i];
 		}
 
-		for (; pt <= &buffer[bytesRead - 1]; pt++)
+		for (int i = 0; i < bytesRead; i++)
 		{
-			if ((*pt) == '\n')
+			if (buffer[i] == '\n')
 			{
-				esc = true;
+				bufferInd = i;
 				break;
 			}
 
-			msgLen += (*pt);
+			msgLen += buffer[i];
 		}
-
-		pt++;
-
-		for (; pt <= &buffer[bytesRead - 1]; pt++)
+		
+		/* MSG has length */
+		if (bufferInd)
 		{
-			message += (*pt);
+			skip = true;		
 		}
+	}
+	
+	if (!skip)
+	{
+		/* get MSG len */
+		while (true)
+		{
+			memset(buffer, 0, inputBufferSize);
+			bytesRead = recv(clientSocket, buffer, inputBufferSize, 0);
 
-		if (esc)
+			if (bytesRead == 0)
+			{
+				throw(runtime_error("disconnect"));
+			}
+
+			for (int i = 0; i < bytesRead; i++)
+			{
+				if (buffer[i] == '\n')
+				{
+					bufferInd = i;
+					break;
+				}
+
+				msgLen += buffer[i];
+			}
+
+			if (bufferInd)
+			{
+				break;
+			}
+		}
+	}
+
+	bufferInd++;
+
+	clientMessage.totalLength = stoi(msgLen);
+
+	for (int i = 0; i < clientMessage.totalLength; i++, bufferInd++)
+	{
+		if (bufferInd >= bytesRead)
 		{
 			break;
 		}
+
+		clientMessage.message += buffer[bufferInd];
 	}
 
-	msgLength = stoi(msgLen);
-
-	while ((int)message.length() < msgLength)
+	if ((int)clientMessage.message.size() == clientMessage.totalLength)
 	{
-		char buffer[inputBufferSize];
-		char* pt = buffer;
+		clientMessage.fine = true;
 
-		int bytesRead = recv(clientSocket, buffer, inputBufferSize, 0);
-
-		if (bytesRead == 0)
+		/* copy tail if MSG is filled */
+		for (int i = bufferInd; i < bytesRead; i++)
 		{
-			throw(runtime_error("disconnect"));
-		}
-
-		for (; pt <= &buffer[bytesRead - 1]; pt++)
-		{
-			message += (*pt);
+			clientTail.message += buffer[i];
 		}
 	}
+	else
+	{
+		while ((int)clientMessage.message.size() < clientMessage.totalLength)
+		{
+			memset(buffer, 0, inputBufferSize);
+			bufferInd = 0;
 
-	return message;
+			bytesRead = recv(clientSocket, buffer, inputBufferSize, 0);
+
+			if (bytesRead == 0)
+			{
+				throw(runtime_error("disconnect"));
+			}
+
+			for (int i = 0; i < bytesRead; i++)
+			{
+				if ((int)clientMessage.message.size() == clientMessage.totalLength)
+				{
+					bufferInd = i;
+					break;
+				}
+
+				clientMessage.message += buffer[i];
+			}
+
+			/* copy tail if MSG is filled */
+			if ((int)clientMessage.message.size() == clientMessage.totalLength)
+			{
+				clientMessage.fine = true;
+				bufferInd = bytesRead;
+
+				for (int i = bufferInd; i < bytesRead; i++)
+				{
+					clientTail.message += buffer[i];
+				}
+			}	
+		}
+	}
+	
+	log(clientMessage.message, client.info);
+
+	unique_lock < mutex > clientsLk(clientsMutex);
+
+	auto it = clients.find(client.id);
+
+	if (it == clients.end())
+	{
+		return;
+	}
+
+	if (!client.messages.empty() && !client.messages[client.messages.size() - 1].fine)
+	{
+		it->second.messages.pop_back();
+	}
+
+	it->second.messages.push_back(clientMessage);
+	it->second.messages.push_back(clientTail);
+			
+	it->second.inProcess = false;
 }
 
 void Server::checkClient(Client client)
@@ -172,19 +263,7 @@ void Server::checkClient(Client client)
 
 	try
 	{
-		message = getMessage(client);
-		log(message, client.info);
-
-		unique_lock < mutex > clientsLk(clientsMutex);
-
-		auto it = clients.find(client.id);
-
-		if (it == clients.end())
-		{
-			return;
-		}
-
-		it->second.messages.push_back(message);
+		getMessage(client);
 	}
 	catch (exception &ex) 
 	{
@@ -198,11 +277,12 @@ void Server::receiveMessages()
 
 	unique_lock < mutex > clientsLk(clientsMutex);
 
-	for (auto &i : clients)
+	for (auto &clientIt : clients)
 	{
-		if (FD_ISSET(i.second.sock, &readfds))
+		if (FD_ISSET(clientIt.second.sock, &readfds))
 		{
-			clientThreads.push_back(thread(&Server::checkClient, this, i.second));
+			clientIt.second.inProcess = true;
+			clientThreads.push_back(thread(&Server::checkClient, this, clientIt.second));
 		}
 	}
 
@@ -223,12 +303,12 @@ void Server::checkActivity(int timeToWait)
 
 	unique_lock < mutex > clientsLk(clientsMutex);
 
-	for (auto &i : clients)
+	for (auto &clientIt : clients)
 	{
-		if (i.second.type == ClientType::NORMAL)
+		if (!clientIt.second.inProcess && clientIt.second.type == ClientType::NORMAL)
 		{
-			FD_SET(i.second.sock, &readfds);
-			maxSocket = max(maxSocket, i.second.sock);
+			FD_SET(clientIt.second.sock, &readfds);
+			maxSocket = max(maxSocket, clientIt.second.sock);
 		}
 	}
 
@@ -300,20 +380,31 @@ void Server::approve(const Client &client)
 	}	
 }
 
-map < int, string > Server::getClientsMessages()
+map < int, vector < string > > Server::getClientsMessages()
 {
-	map < int, string > res;
+	map < int, vector < string > > res;
 
 	unique_lock < mutex > clientsLk(clientsMutex);
 
-	for (auto &i : clients)
+	for (auto &clientIt : clients)
 	{
-		if (i.second.type == ClientType::NORMAL && !i.second.messages.empty())
+		if (clientIt.second.type == ClientType::NORMAL)
 		{
-			string message = i.second.messages[0];
-			res.insert({i.first, message});
+			vector < string > messages;
 
-			i.second.messages.pop_front();
+			for (auto &message : clientIt.second.messages)
+			{
+				if (message.fine)
+				{
+					messages.push_back(message.message);
+					clientIt.second.messages.pop_front();
+				}
+			}
+			
+			if (!messages.empty())
+			{
+				res.insert({clientIt.first, messages});
+			}
 		}
 	}
 
@@ -437,9 +528,9 @@ void Server::disconnectClient(Client client)
 
 Server::~Server()
 {
-	for (auto &i : clients)
+	for (auto &client : clients)
 	{
-		close(i.second.sock);
+		close(client.second.sock);
 	}
 
 	close(masterSocket);

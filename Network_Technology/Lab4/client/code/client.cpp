@@ -52,91 +52,173 @@ void Client::sendMessage(const string &message)
 	}
 }
 
-string Client::getMessage()
+void Client::getMessage()
 {
+	Message message;
+	Message tail;
+		
+	char buffer[inputBufferSize];
+	int bytesRead = 0;
+	int bufferInd = 0;
+	
 	string msgLen = "";
-	int msgLength = 0;
 
-	string message = "";
+	bool skip = false;
 
-	while (true)
+	if (!messages.empty() && !messages[messages.size() - 1].fine)
 	{
-		bool esc = false;
-		char buffer[inputBufferSize];
-		char* pt = buffer;
+		string localBuffer = messages[messages.size() - 1].message;
+		bytesRead = localBuffer.size();
 
-		int bytesRead = recv(sock, buffer, inputBufferSize, 0);
-
-		if (bytesRead == 0)
+		for (int i = 0; i < bytesRead; i++)
 		{
-			throw(runtime_error("disconnected"));
+			buffer[i] = localBuffer[i];
 		}
 
-		for (; pt <= &buffer[bytesRead - 1]; pt++)
+		for (int i = 0; i < bytesRead; i++)
 		{
-			if ((*pt) == '\n')
+			if (buffer[i] == '\n')
 			{
-				esc = true;
+				bufferInd = i;
 				break;
 			}
-
-			msgLen += (*pt);
+			
+			msgLen += buffer[i];
 		}
-
-		pt++;
-
-		for (; pt <= &buffer[bytesRead - 1]; pt++)
+		
+		/* MSG has length */
+		if (bufferInd)
 		{
-			message += (*pt);
+			skip = true;		
 		}
+	}
+	
+	if (!skip)
+	{
+		/* get MSG len */
+		while (true)
+		{
+			memset(buffer, 0, inputBufferSize);
+			bytesRead = recv(sock, buffer, inputBufferSize, 0);
 
-		if (esc)
+			if (bytesRead == 0)
+			{
+				throw(runtime_error("disconnect"));
+			}
+
+			for (int i = 0; i < bytesRead; i++)
+			{
+				if (buffer[i] == '\n')
+				{
+					bufferInd = i;
+					break;
+				}
+
+				msgLen += buffer[i];
+			}
+
+			if (bufferInd)
+			{
+				break;
+			}
+		}
+	}
+
+	bufferInd++;
+
+	message.totalLength = stoi(msgLen);
+
+	for (int i = 0; i < message.totalLength; i++, bufferInd++)
+	{
+		if (bufferInd >= bytesRead)
 		{
 			break;
 		}
+
+		message.message += buffer[bufferInd];
 	}
 
-	msgLength = stoi(msgLen);
-
-	while ((int)message.length() < msgLength)
+	if ((int)message.message.size() == message.totalLength)
 	{
-		char buffer[inputBufferSize];
-		char* pt = buffer;
+		message.fine = true;
 
-		int bytesRead = recv(sock, buffer, inputBufferSize, 0);
-		
-		for (; pt <= &buffer[bytesRead - 1]; pt++)
+		/* copy tail if MSG is filled */
+		for (int i = bufferInd; i < bytesRead; i++)
 		{
-			message += (*pt);
+			tail.message += buffer[i];
 		}
 	}
+	else
+	{
+		while ((int)message.message.size() < message.totalLength)
+		{
+			memset(buffer, 0, inputBufferSize);
+			bufferInd = 0;
+			
+			bytesRead = recv(sock, buffer, inputBufferSize, 0);
 
-	return message;	
+			if (bytesRead == 0)
+			{
+				throw(runtime_error("disconnect"));
+			}
+
+			for (int i = 0; i < bytesRead; i++)
+			{
+				if ((int)message.message.size() == message.totalLength)
+				{
+					bufferInd = i;
+					break;
+				}
+
+				message.message += buffer[i];
+			}
+				
+			/* copy tail if MSG is filled */
+			if ((int)message.message.size() == message.totalLength)
+			{
+				message.fine = true;
+				bufferInd = bytesRead;
+
+				for (int i = bufferInd; i < bytesRead; i++)
+				{
+					tail.message += buffer[i];
+				}
+			}	
+		}
+	}
+	
+	unique_lock < mutex > serverLk(serverMutex);
+
+	if (!messages.empty() && !messages[messages.size() - 1].fine)
+	{
+		messages.pop_back();
+	}
+
+	messages.push_back(message);
+	messages.push_back(tail);
 }
 
 void Client::checkActivity()
 {
-	string message = "";
-	message = getMessage();
-	
-	unique_lock < mutex > serverLk(serverMutex);
-
-	messages.push_back(message);
+	getMessage();
 }
 
-string Client::getServerMessage()
+vector < string > Client::getServerMessages()
 {
+	vector < string > res;
+
 	unique_lock < mutex > serverLk(serverMutex);
 
-	if (messages.empty())
+	for (auto &message : messages)
 	{
-		return "";
+		if (message.fine)
+		{
+			res.push_back(message.message);
+			messages.pop_front();
+		}
 	}
 
-	string msg = messages[0];
-	messages.pop_front();
-
-	return msg;
+	return res;
 }
 
 Client::~Client()

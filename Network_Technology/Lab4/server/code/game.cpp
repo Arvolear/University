@@ -53,24 +53,27 @@ void Game::processNewConnections()
 
 void Game::processMessages()
 {
-	map < int, string > clientMessages = server->getClientsMessages();
+	map < int, vector < string > > clientMessages = server->getClientsMessages();
 
 	/* update parties */
-	for (auto &messagesIt : clientMessages)
+	for (auto &vectorIt : clientMessages)
 	{
-		if (messagesIt.second == "QUIT")
+		for (auto &message : vectorIt.second)
 		{
-			server->updateClientType(messagesIt.first, ClientType::OLD);
-			continue;
-		}
-		
-		Client client = server->getClient(messagesIt.first);
-		
-		auto partyIt = parties.find(client.getParty());
+			if (message == "QUIT")
+			{
+				server->updateClientType(vectorIt.first, ClientType::OLD);
+				continue;
+			}
 
-		if (partyIt != parties.end())
-		{
-			partyIt->second->receiveResponse(messagesIt.first, messagesIt.second);
+			Client client = server->getClient(vectorIt.first);
+
+			auto partyIt = parties.find(client.getParty());
+
+			if (partyIt != parties.end())
+			{
+				partyIt->second->receiveResponse(vectorIt.first, message);
+			}
 		}
 	}
 }
@@ -117,7 +120,7 @@ void Game::processParties()
 		{
 			server->sendMessage(server->getClient(messagesIt.first), messagesIt.second);
 		}
-		
+
 		if (partyIt->second->shouldFinish())
 		{
 			Client cross = server->getClient(partyIt->second->getCrossPlayer());
@@ -140,7 +143,7 @@ void Game::react()
 {
 	while (true)
 	{
-		this_thread::sleep_for(chrono::milliseconds(100));
+		this_thread::sleep_for(chrono::milliseconds(90));
 
 		processNewConnections();
 		processParties();

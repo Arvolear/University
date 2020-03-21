@@ -15,11 +15,14 @@ void Game::check()
 		{
 			client->checkActivity();
 
-			string message = client->getServerMessage();
+			vector < string > messages = client->getServerMessages();
 
-			if (message != "")
+			for (auto &message : messages)
 			{
-				displayMessage(message);
+				if (message != "")
+				{
+					displayMessage(message);
+				}
 			}
 		}
 		catch (exception &ex)

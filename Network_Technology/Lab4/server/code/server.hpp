@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
+#include <cstring>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -29,21 +30,35 @@ enum class ClientType
 class Client
 {
 	private:
+		struct Message
+		{	
+			bool fine;
+			int totalLength;
+			string message;
+
+			Message()
+			{
+				this->fine = false;
+				this->totalLength = -1;
+				this->message = "";
+			}
+		};
+
+		bool inProcess;
+
 		int id;
 		int sock;
 
 		sockaddr_in info;
 		ClientType type;
 
-		deque < string > messages;
+		deque < Message > messages;
 
 		int partyIndex;
-
-	public:
-		friend Server;
-
+		
 		Client()
 		{
+			this->inProcess = false;
 			this->id = -1;
 			this->sock = -1;
 			this->type = ClientType::NONE;
@@ -53,6 +68,7 @@ class Client
 
 		Client(int id, int sock, sockaddr_in info, ClientType type)
 		{
+			this->inProcess = false;
 			this->id = id;
 			this->sock = sock;
 			this->info = info;
@@ -60,6 +76,9 @@ class Client
 
 			this->partyIndex = -1;
 		}
+
+	public:
+		friend Server;
 
 		void setParty(int partyIndex)
 		{
@@ -104,7 +123,7 @@ class Server
 
 		void log(const string &msg, sockaddr_in info);
 
-		string getMessage(Client client);
+		void getMessage(Client client);
 
 		void markDisconnect(Client client);
 	
@@ -123,7 +142,7 @@ class Server
 		
 		void sendMessage(const Client &client, const string &message);
 
-		map < int, string > getClientsMessages();
+		map < int, vector < string > > getClientsMessages();
 		Client getClient(int id);
 		map < int, Client > getClients();
 		map < int, Client > getNewClients();
