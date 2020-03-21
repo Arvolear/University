@@ -40,7 +40,9 @@ class Party
 		string getBeautifulField();
 		void nextTurn();
 
+		void add(queue < pair < int, int > > &q, vector < vector < int > > &used, const pair < int, int > &cur, const pair < int, int > &delta);
 		bool isWin(int row, int col);
+		bool isDraw(int row, int col);
 		bool isValid(const string &message, int &row, int &col);
 	
 	public:

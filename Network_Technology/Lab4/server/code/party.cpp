@@ -200,69 +200,106 @@ bool Party::isValid(const string &message, int &row, int &col)
 	return true;
 }
 
-bool Party::isWin(int row, int col)
+void Party::add(queue < pair < int, int > > &q, vector < vector < int > > &used, const pair < int, int > &cur, const pair < int, int > &delta)
 {
-	vector < vector < int > > used(field.size(), vector < int >(field[0].size(), 0));
-
-	queue < pair < int, int > > q;
-
-	q.push({row, col});
-	used[row][col] = 1;
-
-	while (!q.empty())
+	if ((cur.first - delta.first >= 0 && cur.first - delta.first < (int)field.size()) && 
+		(cur.second - delta.second >= 0 && cur.second - delta.second < (int)field[0].size()))
 	{
-		pair < int, int > cur = q.front();
-		q.pop();
-
-		if (cur.first > 0)
+		if (!used[cur.first - delta.first][cur.second - delta.second] && 
+		    field[cur.first - delta.first][cur.second - delta.second] == currentSymbol)
 		{
-			if (!used[cur.first - 1][cur.second] && field[cur.first - 1][cur.second] == currentSymbol)
-			{
-				used[cur.first - 1][cur.second] = used[cur.first][cur.second] + 1;
-				q.push({cur.first - 1, cur.second});
-			}
-		}
-		
-		if (cur.first < (int)field.size() - 1)
-		{
-			if (!used[cur.first + 1][cur.second] && field[cur.first + 1][cur.second] == currentSymbol)
-			{
-				used[cur.first + 1][cur.second] = used[cur.first][cur.second] + 1;
-				q.push({cur.first + 1, cur.second});
-			}
-		}
-		
-		if (cur.second > 0)
-		{
-			if (!used[cur.first][cur.second - 1] && field[cur.first][cur.second - 1] == currentSymbol)
-			{
-				used[cur.first][cur.second - 1] = used[cur.first][cur.second] + 1;
-				q.push({cur.first, cur.second - 1});
-			}
-		}
-		
-		if (cur.second < (int)field[0].size() - 1)
-		{
-			if (!used[cur.first][cur.second + 1] && field[cur.first][cur.second + 1] == currentSymbol)
-			{
-				used[cur.first][cur.second + 1] = used[cur.first][cur.second] + 1;
-				q.push({cur.first, cur.second + 1});
-			}
+			used[cur.first - delta.first][cur.second - delta.second] = 1;
+			q.push({cur.first - delta.first, cur.second - delta.second});
 		}
 	}
+}
 
-	for (size_t i = 0; i < used.size(); i++)
+bool Party::isWin(int row, int col)
+{
+	for (int state = 0; state < 4; state++)
 	{
-		for (size_t j = 0; j < used[i].size(); j++)
+		vector < vector < int > > used(field.size(), vector < int >(field[0].size(), 0));
+
+		queue < pair < int, int > > q;
+
+		q.push({row, col});
+		used[row][col] = 1;
+
+		while (!q.empty())
 		{
-			if (used[i][j] == TO_WIN)
+			pair < int, int > cur = q.front();
+			q.pop();
+
+			// HORIZONTAL
+			if (state == 0)
 			{
-				return true;
+				add(q, used, cur, {0, 1});
+				add(q, used, cur, {0, -1});
 			}
+
+			// VERTICAL
+			if (state == 1)
+			{
+				add(q, used, cur, {1, 0});
+				add(q, used, cur, {-1, 0});	
+			}
+
+			// MAIN
+			if (state == 2)
+			{
+				add(q, used, cur, {1, 1});
+				add(q, used, cur, {-1, -1});		
+			}
+			
+			// SUB
+			if (state == 3)
+			{
+				add(q, used, cur, {-1, 1});
+				add(q, used, cur, {1, -1});
+			}
+		}
+
+		int total = 0;
+	
+		for (size_t i = 0; i < used.size(); i++)
+		{
+			for (size_t j = 0; j < used[i].size(); j++)
+			{
+				total += used[i][j];
+			}
+		}
+
+		if (total >= TO_WIN)
+		{
+			return true;
 		}
 	}
 
 	return false;
+}
+
+bool Party::isDraw(int row, int col)
+{
+	if (isWin(row, col))
+	{
+		return false;
+	}
+
+	bool draw = true;
+
+	for (size_t i = 0; i < field.size(); i++)
+	{
+		for (size_t j = 0; j < field[i].size(); j++)
+		{
+			if (field[i][j] == "?")
+			{
+				draw = false;
+				break;
+			}
+		}
+	}
+
+	return draw;
 }
 
 void Party::receiveResponse(int id, string message)
@@ -296,17 +333,24 @@ void Party::receiveResponse(int id, string message)
 	{
 		prevMessage = getBeautifulField() + "You Lost, better luck next time!\n";
 		currMessage = getBeautifulField() + "You Won! Congratulations!\n";	
-	
+
 		finish = true;
+	}
+	else if (isDraw(row, col))
+	{
+		prevMessage = getBeautifulField() + "It's a Draw!\n";
+		currMessage = getBeautifulField() + "It's a Draw!\n";	
+
+		finish = true;	
 	}
 	else
 	{
 		nextTurn();
-		
+
 		prevMessage = "\nOpponent turn (" + currentSymbol + ")\n" + getBeautifulField() + "Wait...\n";
 		currMessage = "\nYour turn (" + currentSymbol + ")\n" + getBeautifulField();
 	}
-	
+
 	outputMessages.insert({getOtherPlayer(current), prevMessage});
 	outputMessages.insert({current, currMessage});
 }
