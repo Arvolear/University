@@ -164,21 +164,20 @@ void Client::getMessage()
 
 			for (int i = 0; i < bytesRead; i++)
 			{
+				message.message += buffer[i];
+				
 				if ((int)message.message.size() == message.totalLength)
 				{
-					bufferInd = i;
+					bufferInd = i + 1;
+					message.fine = true;
+
 					break;
 				}
-
-				message.message += buffer[i];
 			}
 				
 			/* copy tail if MSG is filled */
-			if ((int)message.message.size() == message.totalLength)
+			if (message.fine)
 			{
-				message.fine = true;
-				bufferInd = bytesRead;
-
 				for (int i = bufferInd; i < bytesRead; i++)
 				{
 					tail.message += buffer[i];

@@ -212,21 +212,20 @@ void Server::getMessage(Client client)
 
 			for (int i = 0; i < bytesRead; i++)
 			{
+				clientMessage.message += buffer[i];
+				
 				if ((int)clientMessage.message.size() == clientMessage.totalLength)
 				{
-					bufferInd = i;
+					bufferInd = i + 1;
+					clientMessage.fine = true;
+
 					break;
 				}
-
-				clientMessage.message += buffer[i];
 			}
 
 			/* copy tail if MSG is filled */
-			if ((int)clientMessage.message.size() == clientMessage.totalLength)
+			if (clientMessage.fine)
 			{
-				clientMessage.fine = true;
-				bufferInd = bytesRead;
-
 				for (int i = bufferInd; i < bytesRead; i++)
 				{
 					clientTail.message += buffer[i];
