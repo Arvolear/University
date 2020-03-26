@@ -6,6 +6,7 @@ public class Derived extends Base
 	{
 		super(val);
 		this.dummy = 2;
+		System.out.println("Derived constructor");
 	}
 
 	public static void staticDummy()
