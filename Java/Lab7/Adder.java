@@ -1,13 +1,6 @@
 public class Adder
 {
-	private Iterator iter; 
-
-	public Adder(Iterator iter)
-	{
-		this.iter = iter;
-	}
-
-	public int count()
+	public int count(Iterator iter)
 	{
 		int res = 0;
 

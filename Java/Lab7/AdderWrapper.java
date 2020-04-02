@@ -2,80 +2,9 @@ public class AdderWrapper
 {
 	private Adder adder;
 
-	public int primes(final int amount)
+	public AdderWrapper()
 	{
-		adder = new Adder(new PrimeSequence(amount));
-
-		return adder.count();
-	}
-
-	public int evens(final int amount)
-	{
-		adder = new Adder(new Iterator()
-							{
-								int numberOfElements = amount;
-								int numberPastElements = 0;
-								int current = -2;
-
-								@Override
-								public int next()
-								{
-									current += 2;
-									numberPastElements++;
-		
-									System.out.print(current + " ");
-									return current;
-								}
-
-								@Override
-								public boolean hasNext()
-								{
-									if (numberPastElements + 1 > numberOfElements)
-									{
-										return false;
-									}
-
-									return true;
-								}
-
-							});
-
-		return adder.count();
-	}
-
-	public int odds(final int amount)
-	{
-		class OddSequence implements Iterator
-		{
-			int numberOfElements = amount;
-			int numberPastElements = 0;
-			int current = -1;
-
-			@Override
-			public int next()
-			{
-				current += 2;
-				numberPastElements++;
-
-				System.out.print(current + " ");
-				return current;
-			}
-
-			@Override
-			public boolean hasNext()
-			{
-				if (numberPastElements + 1 > numberOfElements)
-				{
-					return false;
-				}
-
-				return true;
-			}
-		}
-
-		adder = new Adder(new OddSequence());
-
-		return adder.count();
+		adder = new Adder();
 	}
 
 	class FiboSequence implements Iterator
@@ -126,10 +55,8 @@ public class AdderWrapper
 		}	
 	}
 
-	public int fibos(int amount)
+	public int count(Iterator inter)
 	{
-		adder = new Adder(new FiboSequence(amount));
-
-		return adder.count();
+		return adder.count(inter);
 	}
 }
