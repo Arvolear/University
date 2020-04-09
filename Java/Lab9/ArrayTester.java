@@ -11,7 +11,7 @@ public class ArrayTester
 	ArrayList < Point > points;
 	Random generator;
 
-	ArrayTester()
+	public ArrayTester()
 	{
 		points = new ArrayList<>();
 		generator = new Random();
@@ -41,7 +41,7 @@ public class ArrayTester
 		Iterator < Point > iter = points.iterator();
 		
 		int i = 0;
-		
+
 		while (iter.hasNext())
 		{
 			Point p = iter.next();

@@ -5,7 +5,7 @@ public class PrimeSequence implements Iterator
 
 	int current;
 
-	PrimeSequence(int numberOfElements)
+	public PrimeSequence(int numberOfElements)
 	{
 		this.numberOfElements = numberOfElements;
 		this.numberPastElements = 0;
