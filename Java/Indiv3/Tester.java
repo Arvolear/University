@@ -6,6 +6,9 @@ import java.util.Map;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.io.BufferedWriter;
 
 public class Tester
 {
@@ -15,15 +18,19 @@ public class Tester
 	private File clientsInfo;
 	private Scanner clientsScanner;
 
+	private BufferedWriter writer;
+
 	public Tester()
 	{
 		parties = new ArrayList<>();
 		games = new TreeMap<>();
 		
 		clientsInfo = new File("./clients_info.txt");
-		
+
 		try
 		{
+			writer = new BufferedWriter(new FileWriter("./output.txt"));
+		
 			clientsScanner = new Scanner(clientsInfo);
 		}
 		catch (Exception ex)
@@ -100,10 +107,13 @@ public class Tester
 		}
 
 		System.out.println("\nHere are all the keys:");
+		
+		write("After search:");
 
 		for (Client c : games.keySet())
 		{
 			System.out.println(c);
+			write(c.toString());
 		}
 
 		// ENTER SECOND CLIENT
@@ -129,10 +139,35 @@ public class Tester
 		}
 
 		System.out.println("\nHere are all the keys:");
-		
+	
+		write("\nAfter deletion:");
+
 		for (Client c : games.keySet())
 		{
 			System.out.println(c);
+			write(c.toString());
+		}
+
+		try
+		{
+			writer.close();
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+		}
+	}
+
+	private void write(String what)
+	{
+		try
+		{
+			writer.write(what);
+			writer.write("\n");
+		}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
 		}
 	}
 }
