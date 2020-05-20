@@ -79,10 +79,6 @@ public class Transferer extends Thread
 		}
 	}
 
-	private void doPut()
-	{
-	}
-
 	@Override
 	public void run()
 	{
@@ -101,11 +97,6 @@ public class Transferer extends Thread
 				case "get":
 				{
 					doGet();
-					break;
-				}
-				case "put":
-				{
-					doPut();
 					break;
 				}
 			}

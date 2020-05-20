@@ -85,11 +85,11 @@ public class Client
 			case "get":
 			{
 				File file = new File(splited[2]);
-				String parent = file.getParent();
+				String parentPath = file.getParent();
 
-				file = new File(parent);
+				File parent = new File(parentPath);
 
-				if (!file.exists() || !file.isDirectory())
+				if (!parent.exists() || !parent.isDirectory())
 				{
 					printResponse("Parent directory does not exist", false);
 
@@ -132,7 +132,10 @@ public class Client
 				transferer.close();
 			}
 
-			printResponse(response, true);
+			if (response.equals("Transferring..."))
+			{
+				printResponse(response, true);
+			}
 		}
 		
 		transferer = null;

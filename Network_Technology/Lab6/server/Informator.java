@@ -153,6 +153,40 @@ public class Informator
 		return "";
 	}
 
+	private String getMkdir(String request)
+	{
+		String splited[] = request.split(" ");
+		String second;
+
+		second = splited[1];
+
+		File toMkdirFile = null;
+
+		if (second.charAt(0) != '/')
+		{
+			toMkdirFile = new File(getCurrentDir() + second);
+		}
+		else
+		{
+			toMkdirFile = new File(second);
+		}
+
+		if (!toMkdirFile.exists())
+		{
+			toMkdirFile.mkdirs();
+
+			try
+			{
+				return toMkdirFile.getCanonicalPath();
+			}
+			catch (Exception ex)
+			{
+			}
+		}
+
+		return "File already exists";
+	}
+
 	private String getGet(String request)
 	{
 		String splited[] = request.split(" ");
@@ -179,7 +213,7 @@ public class Informator
 			return "File is a directory";
 		}
 
-		return "Trasferring...";
+		return "Transferring...";
 	}
 
 	public String getFullResponse(String request)
@@ -203,6 +237,11 @@ public class Informator
 			case "pwd":
 				{
 					response = getPwd();
+					break;
+				}
+			case "mkdir":
+				{
+					response = getMkdir(request);
 					break;
 				}
 			case "get":

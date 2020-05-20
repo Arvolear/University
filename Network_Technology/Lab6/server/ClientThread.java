@@ -65,6 +65,16 @@ public class ClientThread extends Thread
 
 				break;
 			}
+
+			case "mkdir":
+			{
+				if (splited.length != 2)
+				{
+					return false;
+				}
+
+				break;
+			}
 			
 			case "get":
 			{
@@ -123,9 +133,10 @@ public class ClientThread extends Thread
 			}
 			case "get":
 			{
-				if (response.equals("Trasferring..."))
+				if (response.equals("Transferring..."))
 				{
 					outInfo.println("Transferring...");
+					
 					transferer = new Transferer(request, informator.getCurrentDir(), infoSocket.getInetAddress().toString().replace("/", ""), Integer.parseInt(splited[4]));
 					transferer.start();
 		
@@ -135,8 +146,6 @@ public class ClientThread extends Thread
 				break;
 			}
 		}
-
-		outInfo.println(response);
 
 		System.out.println(request);
 		System.out.println(response);
@@ -174,6 +183,7 @@ public class ClientThread extends Thread
 		}
 
 		outInfo.println(informator.getCurrentDir());
+		loggedIn = true;
 
 		return true;
 	}
