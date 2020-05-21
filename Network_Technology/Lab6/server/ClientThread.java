@@ -113,7 +113,6 @@ public class ClientThread extends Thread
 			}
 		}
 
-		outInfo.println("Completed");
 		transferer = null;
 	}
 
@@ -123,6 +122,9 @@ public class ClientThread extends Thread
 		String command = splited[0];
 		
 		String response = informator.getFullResponse(request);
+					
+		System.out.println(request);
+		System.out.println(response);
 
 		switch (command)
 		{
@@ -136,19 +138,21 @@ public class ClientThread extends Thread
 				if (response.equals("Transferring..."))
 				{
 					outInfo.println("Transferring...");
-					
+
 					transferer = new Transferer(request, informator.getCurrentDir(), infoSocket.getInetAddress().toString().replace("/", ""), Integer.parseInt(splited[4]));
 					transferer.start();
-		
 					waitTransferer();
+		
+					outInfo.println("Completed");
+
+					return;
 				}
 
 				break;
 			}
 		}
-
-		System.out.println(request);
-		System.out.println(response);
+					
+		outInfo.println(response);
 	}
 
 	private boolean login()
