@@ -40,9 +40,9 @@ class SolutionShower
 		labelPanel = new JPanel(new BorderLayout());
 		fPanel = new JPanel(new BorderLayout());
 
-		solutionPanel.setBounds(width - width / 16, height + height / 8, width, height / 2);
-		labelPanel.setBounds(width - width / 16, height / 2 + height / 4, width, height / 2);
-		fPanel.setBounds(width - width / 16, height + height / 2 + height / 48, width, height / 2);
+		solutionPanel.setBounds(width - width / 16, height + height / 16, width, height / 2);
+		labelPanel.setBounds(width - width / 16, height / 2 + height / 8 + height / 16, width, height / 2);
+		fPanel.setBounds(width - width / 16, height + height / 4 + height / 5, width, height / 2);
 
 		solutionPanel.setOpaque(false);
 		solutionPanel.setVisible(true);
@@ -65,6 +65,7 @@ class SolutionShower
 		
 		solutionTable.setBackground(new Color(30, 30, 30));
         solutionTable.setForeground(new Color(230, 230, 230));
+		solutionTable.setRowHeight(height / 20);
 
 		solutionTable.setTableHeader(null);
 		solutionTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

@@ -31,7 +31,7 @@ class Solutor implements ActionListener
 		int height = (int)inter.getRenderSize().getHeight() / 4;
 
 		solvePanel = new JPanel(new BorderLayout());
-		solvePanel.setBounds(width / 2 - width / 12, height * 2 + height / 4, width, height);
+		solvePanel.setBounds(width / 2 - width / 12, height * 2 + height / 8, width, height);
 
 		solvePanel.setOpaque(false);
 		solvePanel.setVisible(true);

@@ -58,6 +58,7 @@ class InputShower
 		
 		inputTable.setBackground(new Color(30, 30, 30));
         inputTable.setForeground(new Color(230, 230, 230));
+		inputTable.setRowHeight(height / 20);
 
 		inputTable.setTableHeader(null);
 		inputTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -116,12 +117,11 @@ class InputShower
 
 		inputTable.setModel(new DefaultTableModel(tableInfo, tableColums)
 				{
-				@Override
-				public boolean isCellEditable(int row, int column) 
-				{
-				return false;
-				}
-
+					@Override
+					public boolean isCellEditable(int row, int column) 
+					{
+						return false;
+					}
 				});
 	}
 }

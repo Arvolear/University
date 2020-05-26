@@ -23,14 +23,14 @@ public class Interface extends JPanel
 
 	public Interface()
 	{
+		renderSize = Toolkit.getDefaultToolkit().getScreenSize();
+		renderSize.setSize(renderSize.getWidth() / 2, renderSize.getHeight() / 1.5);
+
 		configure();
 
 		solver = new Solver();
 
 		frame = new JFrame("Transport problem solver");
-
-		renderSize = Toolkit.getDefaultToolkit().getScreenSize();
-		renderSize.setSize(renderSize.getWidth() / 2, renderSize.getHeight() / 1.5);
 
 		setLayout(null);
 
@@ -87,16 +87,34 @@ public class Interface extends JPanel
 		
 		UIManager.put("TableHeader.background", new Color(30, 30, 30));
 		UIManager.put("TableHeader.foreground", new Color(230, 230, 230));	
+
+		setUIFont(new javax.swing.plaf.FontUIResource("Serif", Font.PLAIN, (int)(renderSize.getHeight() / 45.0)));
 	}
+
+	private void setUIFont (javax.swing.plaf.FontUIResource f)
+	{
+		java.util.Enumeration<?> keys = UIManager.getDefaults().keys();
+
+		while (keys.hasMoreElements()) 
+		{
+			Object key = keys.nextElement();
+			Object value = UIManager.get (key);
+
+			if (value instanceof javax.swing.plaf.FontUIResource)
+			{
+				UIManager.put(key, f);
+			}
+		}
+	} 
 
 	@Override
-	public void paintComponent(Graphics g)
-	{
-		super.paintComponent(g);
+		public void paintComponent(Graphics g)
+		{
+			super.paintComponent(g);
 
-		g.setColor(new Color(30, 30, 30));
-		g.fillRect(0, 0, (int)renderSize.getWidth(), (int)renderSize.getHeight()); 
-	}
+			g.setColor(new Color(30, 30, 30));
+			g.fillRect(0, 0, (int)renderSize.getWidth(), (int)renderSize.getHeight()); 
+		}
 
 	Dimension getRenderSize()
 	{
