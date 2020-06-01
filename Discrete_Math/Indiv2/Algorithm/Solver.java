@@ -121,10 +121,10 @@ public class Solver
 
 		if (bfs.get(toState) == -1)
 		{
-			return "Unreachable";
+			return "Unaccesible";
 		}
 
-		return "Reachable";
+		return "Accesible";
 	}
 	
 	public String b2Accesible(String input) throws Exception
@@ -198,10 +198,10 @@ public class Solver
 
 		if (firstToSecond && secondToFirst)
 		{
-			return "Linked";
+			return "Communicative";
 		}
 
-		return "Not linked";
+		return "Not communicative";
 	}
 
 	public String b5EqualityClasses(String input) throws Exception

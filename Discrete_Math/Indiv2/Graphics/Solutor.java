@@ -65,7 +65,7 @@ class Solutor implements ActionListener
 		agbc.fill = GridBagConstraints.HORIZONTAL;
 		agbc.insets = new Insets(10, 0, 0, 0);
 		agbc.ipadx = 0;
-		agbc.ipady = 50;
+		agbc.ipady = -28;
 		
 		GridBagConstraints bgbc = new GridBagConstraints();
 		bgbc.weighty = 1.0;
@@ -91,7 +91,7 @@ class Solutor implements ActionListener
 		bPanel.setLayout(new GridBagLayout());
 		cPanel.setLayout(new GridBagLayout());
 
-		aPanel.setBounds(width / 40, height - height / 24, (int)(width / 3.5), height - height / 4);
+		aPanel.setBounds(width / 40, height - height / 24 + height / 17, (int)(width / 3.5), height - height / 4 - height / 28 + height / 600);
 		bPanel.setBounds(width / 40 + (int)(width / 3.34), height - height / 24 + height / 29 + height / 500, (int)(width / 3.5), height - height / 4 - height / 22);
 		cPanel.setBounds(width / 40 + 2 * (int)(width / 3.34), height - height / 24 + height / 29 + height / 500, (int)(width / 3.5), height - height / 4 - height / 22);
 
@@ -198,6 +198,7 @@ class Solutor implements ActionListener
 
 		aPanel.add(aLabel, agbc);
 		agbc.gridy++;
+		agbc.ipady = 51;
 
 		bPanel.add(bLabel, bgbc);
 		bgbc.gridy++;
@@ -247,45 +248,58 @@ class Solutor implements ActionListener
 		
 		try
 		{
-			if (what.equals("(i, j, step) prob."))
+			switch (what)
 			{
-				solutionShower.displaySolution(solver.a1Probability(solutionShower.getInput()));
-			}
-			else if (what.equals("(init, step) prob."))
-			{
-				solutionShower.displaySolution(solver.a2Probability(solutionShower.getInput()));
-			}
-			else if (what.equals("(i, j) accesible"))
-			{
-				solutionShower.displaySolution(solver.b1Accesible(solutionShower.getInput()));
-			}
-			else if (what.equals("(i) all accesible"))
-			{
-				solutionShower.displaySolution(solver.b2Accesible(solutionShower.getInput()));
-			}
-			else if (what.equals("(i) meaningful"))
-			{
-				solutionShower.displaySolution(solver.b3Meaningful(solutionShower.getInput()));
-			}
-			else if (what.equals("(i, j) communicate"))
-			{
-				solutionShower.displaySolution(solver.b4Communicate(solutionShower.getInput()));
-			}
-			else if (what.equals("Equality classes"))
-			{
-				solutionShower.displaySolution(solver.b5EqualityClasses(solutionShower.getInput()));
-			}
-			else if (what.equals("All absorbing"))
-			{
-				solutionShower.displaySolution(solver.b6Absorbing(solutionShower.getInput()));
-			}
-			else if (what.equals("Irreducible chain"))
-			{
-				solutionShower.displaySolution(solver.c1Irreducible(solutionShower.getInput()));
-			}
-			else if (what.equals("All meaningful"))
-			{
-				solutionShower.displaySolution(solver.c2AllMeaningful(solutionShower.getInput()));
+				case "(i, j, step) prob.":
+				{
+					solutionShower.displaySolution(solver.a1Probability(solutionShower.getInput()));
+					break;
+				}
+				case "(init, step) prob.":
+				{
+					solutionShower.displaySolution(solver.a2Probability(solutionShower.getInput()));
+					break;
+				}
+				case "(i, j) accesible":
+				{
+					solutionShower.displaySolution(solver.b1Accesible(solutionShower.getInput()));
+					break;
+				}
+				case "(i) all accesible":
+				{
+					solutionShower.displaySolution(solver.b2Accesible(solutionShower.getInput()));
+					break;
+				}
+				case "(i) meaningful":
+				{
+					solutionShower.displaySolution(solver.b3Meaningful(solutionShower.getInput()));
+					break;
+				}
+				case "(i, j) communicate":
+				{
+					solutionShower.displaySolution(solver.b4Communicate(solutionShower.getInput()));
+					break;
+				}
+				case "Equality classes":
+				{
+					solutionShower.displaySolution(solver.b5EqualityClasses(solutionShower.getInput()));
+					break;
+				}
+				case "All absorbing":
+				{
+					solutionShower.displaySolution(solver.b6Absorbing(solutionShower.getInput()));
+					break;
+				}
+				case "Irreducible chain":
+				{
+					solutionShower.displaySolution(solver.c1Irreducible(solutionShower.getInput()));
+					break;
+				}
+				case "All meaningful":
+				{
+					solutionShower.displaySolution(solver.c2AllMeaningful(solutionShower.getInput()));
+					break;
+				}
 			}
 		}
 		catch (Exception ex)
