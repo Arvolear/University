@@ -46,7 +46,7 @@ class MatrixHelper
 
 		for (int i = 0; i < first.size(); i++)
 		{
-			for (int j = 0; j < second.get(i).size(); j++)
+			for (int j = 0; j < second.get(0).size(); j++)
 			{
 				for (int k = 0; k < first.get(0).size(); k++)
 				{

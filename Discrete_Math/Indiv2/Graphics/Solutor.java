@@ -119,12 +119,12 @@ class Solutor implements ActionListener
 		cLabel.setForeground(new Color(230, 230, 230));
 		cLabel.setFont(new Font("Serif", Font.PLAIN, height / 12));
 
-		a1Button = new JButton("(i, j, step) prob.");
+		a1Button = new JButton("(i, j, step) probability");
 		a1Button.addActionListener(this);
 		a1Button.setBackground(new Color(100, 100, 100));
 		a1Button.setForeground(new Color(230, 230, 230));
 
-		a2Button = new JButton("(init, step) prob.");
+		a2Button = new JButton("(in, step) probability");
 		a2Button.addActionListener(this);
 		a2Button.setBackground(new Color(100, 100, 100));
 		a2Button.setForeground(new Color(230, 230, 230));
@@ -176,12 +176,12 @@ class Solutor implements ActionListener
 		c2Button.setBackground(new Color(100, 100, 100));
 		c2Button.setForeground(new Color(230, 230, 230));
 		
-		c3Button = new JButton("Primit. period.");
+		c3Button = new JButton("Chain period");
 		c3Button.addActionListener(this);
 		c3Button.setBackground(new Color(100, 100, 100));
 		c3Button.setForeground(new Color(230, 230, 230));
 		
-		c4Button = new JButton("All returnable");
+		c4Button = new JButton("All recurrent");
 		c4Button.addActionListener(this);
 		c4Button.setBackground(new Color(100, 100, 100));
 		c4Button.setForeground(new Color(230, 230, 230));
@@ -250,12 +250,12 @@ class Solutor implements ActionListener
 		{
 			switch (what)
 			{
-				case "(i, j, step) prob.":
+				case "(i, j, step) probability":
 				{
 					solutionShower.displaySolution(solver.a1Probability(solutionShower.getInput()));
 					break;
 				}
-				case "(init, step) prob.":
+				case "(in, step) probability":
 				{
 					solutionShower.displaySolution(solver.a2Probability(solutionShower.getInput()));
 					break;
@@ -298,6 +298,26 @@ class Solutor implements ActionListener
 				case "All meaningful":
 				{
 					solutionShower.displaySolution(solver.c2AllMeaningful(solutionShower.getInput()));
+					break;
+				}
+				case "Chain period":
+				{
+					solutionShower.displaySolution(solver.c3ChainPeriod(solutionShower.getInput()));
+					break;
+				}
+				case "All recurrent":
+				{
+					solutionShower.displaySolution(solver.c4AllRecurrent(solutionShower.getInput()));
+					break;
+				}
+				case "All periodical":
+				{
+					solutionShower.displaySolution(solver.c5AllPeriodical(solutionShower.getInput()));
+					break;
+				}
+				case "Ergodic chain":
+				{
+					solutionShower.displaySolution(solver.c6Ergodic(solutionShower.getInput()));
 					break;
 				}
 			}

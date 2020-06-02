@@ -1,4 +1,4 @@
-Algorithm = Loader.class Solver.class MatrixHelper.class GraphHelper.class
+Algorithm = Loader.class Solver.class MatrixHelper.class GraphHelper.class AlgoHelper.class
 Graphics = Interface.class ProblemChooser.class InputShower.class Solutor.class SolutionShower.class Menu.class
 
 CLASSES = Main.class $(addprefix Algorithm/, $(Algorithm)) $(addprefix Graphics/, $(Graphics))
@@ -23,6 +23,9 @@ Algorithm/MatrixHelper.class: Algorithm/MatrixHelper.java
 
 Algorithm/GraphHelper.class: Algorithm/GraphHelper.java
 	javac Algorithm/GraphHelper.java
+
+Algorithm/AlgoHelper.class: Algorithm/AlgoHelper.java
+	javac Algorithm/AlgoHelper.java
 
 ### GRAPHICS ###
 

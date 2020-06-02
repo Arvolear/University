@@ -10,6 +10,7 @@ public class Solver
 {
 	MatrixHelper matrixHelper;
 	GraphHelper graphHelper;
+	AlgoHelper algoHelper;
 
 	ArrayList < ArrayList < Double > > adjMatrix;
 
@@ -17,6 +18,7 @@ public class Solver
 	{
 		matrixHelper = new MatrixHelper();
 		graphHelper = new GraphHelper();
+		algoHelper = new AlgoHelper();
 	}
 
 	public void load(String path) throws Exception
@@ -328,6 +330,202 @@ public class Solver
 		}
 
 		return builder1.toString() + builder2.toString();
+	}
+
+	public String c3ChainPeriod(String input) throws Exception
+	{
+		String irred = c1Irreducible(input);
+
+		if (irred.equals("Irreducible"))
+		{
+			ArrayList < Double > values = new ArrayList<>();
+			ArrayList < ArrayList < Double > > newMatrix = matrixHelper.copyMatrix(adjMatrix);
+
+			values.add(newMatrix.get(0).get(0));
+
+			for (int i = 0; i < 1000; i++)
+			{
+				newMatrix = matrixHelper.mulMatrix(newMatrix, adjMatrix);
+				values.add(newMatrix.get(0).get(0));
+			}
+
+			int ans = -1;
+
+			for (int i = 0; i < values.size(); i++)
+			{
+				if (values.get(i) > 0)
+				{
+					if (ans == -1)
+					{
+						ans = i + 1;
+					}
+
+					ans = algoHelper.gcd(ans, i + 1);
+				}
+			}
+
+			if (ans == 1)
+			{
+				return "Aperiodic";
+			}
+			
+			return "Period = " + ans;
+		}
+		
+		return "Reducible";
+	}
+
+	public String c4AllRecurrent(String input) throws Exception
+	{
+		ArrayList < ArrayList < Double > > values = new ArrayList<>();
+		ArrayList < ArrayList < Double > > newMatrix = matrixHelper.copyMatrix(adjMatrix);
+
+		for (int i = 0; i < adjMatrix.size(); i++)
+		{
+			ArrayList < Double > tmp = new ArrayList<>();
+			tmp.add(newMatrix.get(i).get(i));
+
+			values.add(tmp);
+		}
+
+		for (int i = 0; i < 1000; i++)
+		{
+			newMatrix = matrixHelper.mulMatrix(newMatrix, adjMatrix);
+			
+			for (int j = 0; j < newMatrix.size(); j++)
+			{
+				values.get(j).add(newMatrix.get(j).get(j));
+			}
+		}
+
+		StringBuilder builder = new StringBuilder();
+
+		for (int i = 0; i < values.size(); i++)
+		{
+			double ans = 0;
+			
+			for (int j = 0; j < values.get(i).size(); j++)
+			{
+				ans += values.get(i).get(j);
+			}
+			
+			if (ans > 50)
+			{
+				builder.append(i);
+				builder.append(" ");
+			}
+
+			System.out.println(ans);
+		}
+
+		return builder.toString();
+	}
+
+	public String c5AllPeriodical(String input) throws Exception
+	{
+		ArrayList < ArrayList < Double > > values = new ArrayList<>();
+		ArrayList < ArrayList < Double > > newMatrix = matrixHelper.copyMatrix(adjMatrix);
+
+		for (int i = 0; i < adjMatrix.size(); i++)
+		{
+			ArrayList < Double > tmp = new ArrayList<>();
+			tmp.add(newMatrix.get(i).get(i));
+
+			values.add(tmp);
+		}
+
+		for (int i = 0; i < 1000; i++)
+		{
+			newMatrix = matrixHelper.mulMatrix(newMatrix, adjMatrix);
+			
+			for (int j = 0; j < newMatrix.size(); j++)
+			{
+				values.get(j).add(newMatrix.get(j).get(j));
+			}
+		}
+
+		StringBuilder builder = new StringBuilder();
+
+		for (int i = 0; i < values.size(); i++)
+		{
+			int ans = -1;
+			
+			for (int j = 0; j < values.get(i).size(); j++)
+			{
+				if (values.get(i).get(j) > 0)
+				{
+					if (ans == -1)
+					{
+						ans = j + 1;
+					}
+
+					ans = algoHelper.gcd(ans, j + 1);
+				}
+			}
+			
+			if (ans > 1)
+			{
+				builder.append(i);
+				builder.append(" ");
+			}
+		}
+
+		return builder.toString();
+	}
+
+	public String c6Ergodic(String input) throws Exception
+	{
+		for (int i = 0; i < adjMatrix.size(); i++)
+		{
+			for (int j = 0; j < adjMatrix.get(i).size(); j++)
+			{
+				if (adjMatrix.get(i).get(j) <= 0.0)
+				{
+					return "Not ergodic";
+				}
+			}
+		}
+		
+		StringBuilder builder = new StringBuilder();
+
+		ArrayList < Double > ans = algoHelper.solveGauss(adjMatrix);
+		
+		int steps = 2;
+
+		for (int i = 0; i < 3; i++)
+		{
+			ArrayList < ArrayList < Double > > approx = matrixHelper.binPowMatrix(adjMatrix, steps);
+			
+			builder.append("Approx " + steps + ": ");
+	
+			for (int j = 0; j < approx.get(0).size(); j++)
+			{
+				double cut = (int)(approx.get(0).get(j) * 10000) / 10000.0;
+
+				builder.append(cut);
+
+				if (j != approx.get(0).size() - 1)
+				{
+					builder.append(" ");
+				}
+			}
+
+			builder.append("; ");
+
+			steps *= 2;
+		}
+
+		builder.append("Real: ");
+
+		for (int i = 0; i < ans.size(); i++)
+		{
+			double cut = (int)(ans.get(i) * 10000) / 10000.0;
+
+			builder.append(cut);
+			builder.append(" ");
+		}
+
+		return builder.toString();
 	}
 
 	public Object[][] getInput()
