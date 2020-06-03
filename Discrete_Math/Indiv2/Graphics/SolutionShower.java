@@ -35,8 +35,8 @@ class SolutionShower
 		inputPanel = new JPanel(new BorderLayout());
 		outputPanel = new JPanel(new BorderLayout());
 		
-		inputPanel.setBounds(width - width / 40, height, width, height / 4);
-		outputPanel.setBounds(width - width / 40, height + height / 4 + height / 8, width, height / 4);
+		inputPanel.setBounds(width - width / 25, height, width, height / 4);
+		outputPanel.setBounds(width - width / 25, height + height / 4 + height / 8, width, height / 4);
 		
 		inputPanel.setOpaque(false);
 		inputPanel.setVisible(true);
@@ -72,6 +72,11 @@ class SolutionShower
 		
 		inter.add(inputPanel);
 		inter.add(outputPanel);
+	}
+
+	void clearInput()
+	{
+		inputField.setText("");
 	}
 
 	String getInput()

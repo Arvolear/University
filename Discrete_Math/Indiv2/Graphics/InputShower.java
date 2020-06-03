@@ -36,8 +36,8 @@ class InputShower
 		inputPanel = new JPanel(new BorderLayout());
 		labelPanel = new JPanel(new BorderLayout());
 
-		inputPanel.setBounds(width - width / 40, height / 4, width, height / 2);
-		labelPanel.setBounds(width - width / 40, 0, width, height / 4);
+		inputPanel.setBounds(width - width / 25, height / 4, width, height / 2);
+		labelPanel.setBounds(width - width / 25, 0, width, height / 4);
 
 		inputPanel.setOpaque(false);
 		inputPanel.setVisible(true);

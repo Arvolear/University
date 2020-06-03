@@ -34,7 +34,7 @@ class ProblemChooser implements ActionListener
 		int height = (int)inter.getRenderSize().getHeight() / 4;
 
 		openPanel = new JPanel(new BorderLayout());
-		openPanel.setBounds(width / 2 - width / 24, height / 2, width, height);
+		openPanel.setBounds(width / 2 - width / 16, height / 2, width, height);
 
 		openPanel.setOpaque(false);
 		openPanel.setVisible(true);
@@ -70,7 +70,8 @@ class ProblemChooser implements ActionListener
 			}
 			catch (Exception ex)
 			{
-				JOptionPane.showMessageDialog(inter.getFrame(), "Invalid file format!", "Error", JOptionPane.ERROR_MESSAGE);
+				solver.clear();
+				JOptionPane.showMessageDialog(inter.getFrame(), "Error: invalid file format", "Error", JOptionPane.ERROR_MESSAGE);
 			}
 		}
 	}

@@ -24,7 +24,7 @@ public class Interface extends JPanel
 	public Interface()
 	{
 		renderSize = Toolkit.getDefaultToolkit().getScreenSize();
-		renderSize.setSize(renderSize.getWidth() / 2, renderSize.getHeight() / 1.5);
+		renderSize.setSize(renderSize.getWidth() / 1.85, renderSize.getHeight() / 1.5);
 
 		configure();
 

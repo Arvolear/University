@@ -5,6 +5,7 @@ import Algorithm.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.*;
 
 class Solutor implements ActionListener
 {
@@ -63,19 +64,19 @@ class Solutor implements ActionListener
 		agbc.gridy = 0;
 		agbc.anchor = GridBagConstraints.PAGE_START;
 		agbc.fill = GridBagConstraints.HORIZONTAL;
-		agbc.insets = new Insets(10, 0, 0, 0);
+		agbc.insets = new Insets(height / 60, 0, 0, 0);
 		agbc.ipadx = 0;
-		agbc.ipady = -28;
-		
+		agbc.ipady = height / 60;
+
 		GridBagConstraints bgbc = new GridBagConstraints();
 		bgbc.weighty = 1.0;
 		bgbc.gridx = 0;
 		bgbc.gridy = 0;
 		bgbc.anchor = GridBagConstraints.PAGE_START;
 		bgbc.fill = GridBagConstraints.HORIZONTAL;
-		bgbc.insets = new Insets(10, 0, 0, 0);
+		bgbc.insets = new Insets(height / 60, 0, 0, 0);
 		bgbc.ipadx = 0;
-		bgbc.ipady = 20;
+		bgbc.ipady = height / 30;
 		
 		GridBagConstraints cgbc = new GridBagConstraints();
 		cgbc.weighty = 1.0;
@@ -83,17 +84,17 @@ class Solutor implements ActionListener
 		cgbc.gridy = 0;
 		cgbc.anchor = GridBagConstraints.PAGE_START;
 		cgbc.fill = GridBagConstraints.HORIZONTAL;
-		cgbc.insets = new Insets(10, 0, 0, 0);
+		cgbc.insets = new Insets(height / 60, 0, 0, 0);
 		cgbc.ipadx = 0;
-		cgbc.ipady = 20;
+		cgbc.ipady = height / 30;
 
 		aPanel.setLayout(new GridBagLayout());
 		bPanel.setLayout(new GridBagLayout());
 		cPanel.setLayout(new GridBagLayout());
 
-		aPanel.setBounds(width / 40, height - height / 24 + height / 17, (int)(width / 3.5), height - height / 4 - height / 28 + height / 600);
-		bPanel.setBounds(width / 40 + (int)(width / 3.34), height - height / 24 + height / 29 + height / 500, (int)(width / 3.5), height - height / 4 - height / 22);
-		cPanel.setBounds(width / 40 + 2 * (int)(width / 3.34), height - height / 24 + height / 29 + height / 500, (int)(width / 3.5), height - height / 4 - height / 22);
+		aPanel.setBounds(width / 32, height - height / 24 + height / 29 + height / 500, (int)(width / 3.5), height - height / 4 - height / 22);
+		bPanel.setBounds(width / 32 + (int)(width / 3.34), height - height / 24 + height / 29 + height / 500, (int)(width / 3.5), height - height / 4 - height / 22);
+		cPanel.setBounds(width / 32 + 2 * (int)(width / 3.34), height - height / 24 + height / 29 + height / 500, (int)(width / 3.5), height - height / 4 - height / 22);
 
 		aPanel.setOpaque(false);
 		aPanel.setVisible(true);
@@ -119,38 +120,38 @@ class Solutor implements ActionListener
 		cLabel.setForeground(new Color(230, 230, 230));
 		cLabel.setFont(new Font("Serif", Font.PLAIN, height / 12));
 
-		a1Button = new JButton("(i, j, step) probability");
+		a1Button = new JButton("(i, j, step) prob.");
 		a1Button.addActionListener(this);
 		a1Button.setBackground(new Color(100, 100, 100));
 		a1Button.setForeground(new Color(230, 230, 230));
 
-		a2Button = new JButton("(in, step) probability");
+		a2Button = new JButton("(in, step) prob.");
 		a2Button.addActionListener(this);
 		a2Button.setBackground(new Color(100, 100, 100));
 		a2Button.setForeground(new Color(230, 230, 230));
 		
-		a3Button = new JButton("(val) expectancy");
+		a3Button = new JButton("(in, val) expect.");
 		a3Button.addActionListener(this);
 		a3Button.setBackground(new Color(100, 100, 100));
 		a3Button.setForeground(new Color(230, 230, 230));
 	
 
-		b1Button = new JButton("(i, j) accesible");
+		b1Button = new JButton("(i, j) accessible");
 		b1Button.addActionListener(this);
 		b1Button.setBackground(new Color(100, 100, 100));
 		b1Button.setForeground(new Color(230, 230, 230));
 
-		b2Button = new JButton("(i) all accesible");
+		b2Button = new JButton("(i) all accessible");
 		b2Button.addActionListener(this);
 		b2Button.setBackground(new Color(100, 100, 100));
 		b2Button.setForeground(new Color(230, 230, 230));
 		
-		b3Button = new JButton("(i) meaningful");
+		b3Button = new JButton("(i) significant");
 		b3Button.addActionListener(this);
 		b3Button.setBackground(new Color(100, 100, 100));
 		b3Button.setForeground(new Color(230, 230, 230));
 		
-		b4Button = new JButton("(i, j) communicate");
+		b4Button = new JButton("(i, j) communic.");
 		b4Button.addActionListener(this);
 		b4Button.setBackground(new Color(100, 100, 100));
 		b4Button.setForeground(new Color(230, 230, 230));
@@ -166,12 +167,12 @@ class Solutor implements ActionListener
 		b6Button.setForeground(new Color(230, 230, 230));
 		
 
-		c1Button = new JButton("Irreducible chain");
+		c1Button = new JButton("Irreducible");
 		c1Button.addActionListener(this);
 		c1Button.setBackground(new Color(100, 100, 100));
 		c1Button.setForeground(new Color(230, 230, 230));
 
-		c2Button = new JButton("All meaningful");
+		c2Button = new JButton("All significant");
 		c2Button.addActionListener(this);
 		c2Button.setBackground(new Color(100, 100, 100));
 		c2Button.setForeground(new Color(230, 230, 230));
@@ -191,14 +192,15 @@ class Solutor implements ActionListener
 		c5Button.setBackground(new Color(100, 100, 100));
 		c5Button.setForeground(new Color(230, 230, 230));
 		
-		c6Button = new JButton("Ergodic chain");
+		c6Button = new JButton("Ergodic distrib.");
 		c6Button.addActionListener(this);
 		c6Button.setBackground(new Color(100, 100, 100));
 		c6Button.setForeground(new Color(230, 230, 230));
 
 		aPanel.add(aLabel, agbc);
 		agbc.gridy++;
-		agbc.ipady = 51;
+		agbc.ipady = height / 15;
+		agbc.insets = new Insets(0, 0, height / 30, 0);
 
 		bPanel.add(bLabel, bgbc);
 		bgbc.gridy++;
@@ -250,32 +252,37 @@ class Solutor implements ActionListener
 		{
 			switch (what)
 			{
-				case "(i, j, step) probability":
+				case "(i, j, step) prob.":
 				{
 					solutionShower.displaySolution(solver.a1Probability(solutionShower.getInput()));
 					break;
 				}
-				case "(in, step) probability":
+				case "(in, step) prob.":
 				{
 					solutionShower.displaySolution(solver.a2Probability(solutionShower.getInput()));
 					break;
 				}
-				case "(i, j) accesible":
+				case "(in, val) expect.":
 				{
-					solutionShower.displaySolution(solver.b1Accesible(solutionShower.getInput()));
+					solutionShower.displaySolution(solver.a3Expectancy(solutionShower.getInput()));
 					break;
 				}
-				case "(i) all accesible":
+				case "(i, j) accessible":
 				{
-					solutionShower.displaySolution(solver.b2Accesible(solutionShower.getInput()));
+					solutionShower.displaySolution(solver.b1Accessible(solutionShower.getInput()));
 					break;
 				}
-				case "(i) meaningful":
+				case "(i) all accessible":
 				{
-					solutionShower.displaySolution(solver.b3Meaningful(solutionShower.getInput()));
+					solutionShower.displaySolution(solver.b2Accessible(solutionShower.getInput()));
 					break;
 				}
-				case "(i, j) communicate":
+				case "(i) significant":
+				{
+					solutionShower.displaySolution(solver.b3Significant(solutionShower.getInput()));
+					break;
+				}
+				case "(i, j) communic.":
 				{
 					solutionShower.displaySolution(solver.b4Communicate(solutionShower.getInput()));
 					break;
@@ -283,49 +290,56 @@ class Solutor implements ActionListener
 				case "Equality classes":
 				{
 					solutionShower.displaySolution(solver.b5EqualityClasses(solutionShower.getInput()));
+					solutionShower.clearInput();
 					break;
 				}
 				case "All absorbing":
 				{
 					solutionShower.displaySolution(solver.b6Absorbing(solutionShower.getInput()));
+					solutionShower.clearInput();
 					break;
 				}
-				case "Irreducible chain":
+				case "Irreducible":
 				{
 					solutionShower.displaySolution(solver.c1Irreducible(solutionShower.getInput()));
+					solutionShower.clearInput();
 					break;
 				}
-				case "All meaningful":
+				case "All significant":
 				{
-					solutionShower.displaySolution(solver.c2AllMeaningful(solutionShower.getInput()));
+					solutionShower.displaySolution(solver.c2AllSignificant(solutionShower.getInput()));
+					solutionShower.clearInput();
 					break;
 				}
 				case "Chain period":
 				{
 					solutionShower.displaySolution(solver.c3ChainPeriod(solutionShower.getInput()));
+					solutionShower.clearInput();
 					break;
 				}
 				case "All recurrent":
 				{
 					solutionShower.displaySolution(solver.c4AllRecurrent(solutionShower.getInput()));
+					solutionShower.clearInput();
 					break;
 				}
 				case "All periodical":
 				{
 					solutionShower.displaySolution(solver.c5AllPeriodical(solutionShower.getInput()));
+					solutionShower.clearInput();
 					break;
 				}
-				case "Ergodic chain":
+				case "Ergodic distrib.":
 				{
 					solutionShower.displaySolution(solver.c6Ergodic(solutionShower.getInput()));
+					solutionShower.clearInput();
 					break;
 				}
 			}
 		}
 		catch (Exception ex)
 		{
-			solutionShower.displaySolution("Error");
-			JOptionPane.showMessageDialog(inter.getFrame(), "Wrong input!", "Error", JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(inter.getFrame(), ex.getLocalizedMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 		}
 	}
 }

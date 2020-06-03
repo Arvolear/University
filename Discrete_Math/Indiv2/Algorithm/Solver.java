@@ -30,15 +30,53 @@ public class Solver
 		adjMatrix = loader.getAdjMatrix();
 	}
 
+	public void clear()
+	{
+		adjMatrix = null;
+	}
+
+	private void checkMatrix() throws Exception
+	{
+		if (adjMatrix == null)
+		{
+			throw new Exception("Error: problem input is missing");
+		}
+	}
+
+	private int[] parseInt(String input)
+	{
+		try
+		{
+			Pattern pattern = Pattern.compile("\\s+");
+			return pattern.splitAsStream(input.trim()).mapToInt(Integer::parseInt).toArray();
+		}
+		catch (Exception ex)
+		{
+			return new int[0];
+		}
+	}
+	
+	private double[] parseDouble(String input)
+	{
+		try
+		{
+			Pattern pattern = Pattern.compile("\\s+");
+			return pattern.splitAsStream(input.trim()).mapToDouble(Double::parseDouble).toArray();
+		}
+		catch (Exception ex)
+		{
+			return new double[0];
+		}
+	}
+
 	public String a1Probability(String input) throws Exception
 	{
-		Pattern pattern = Pattern.compile("\\s+");
-
-		int array[] = pattern.splitAsStream(input.trim()).mapToInt(Integer::parseInt).toArray();
+		checkMatrix();
+		int array[] = parseInt(input);
 
 		if (array.length != 3)
 		{
-			throw new Exception();
+			throw new Exception("Expected input: <from vertex> <to vertex> <steps>");
 		}
 
 		int fromState = array[0];
@@ -49,7 +87,7 @@ public class Solver
 
 		if (ans == null)
 		{
-			throw new Exception();
+			throw new Exception("Error");
 		}
 			
 		double cut = (int)(ans.get(fromState).get(toState) * 10000) / 10000.0;
@@ -59,9 +97,13 @@ public class Solver
 
 	public String a2Probability(String input) throws Exception
 	{
-		Pattern pattern = Pattern.compile("\\s+");
+		checkMatrix();
+		double array[] = parseDouble(input);
 
-		double array[] = pattern.splitAsStream(input.trim()).mapToDouble(Double::parseDouble).toArray();
+		if (array.length != adjMatrix.size() + 1)
+		{
+			throw new Exception("Expected input: <array of length " + adjMatrix.size() + "> <steps>");
+		}
 
 		int steps = (int)array[array.length - 1];
 
@@ -71,11 +113,6 @@ public class Solver
 		for (int i = 0; i < array.length - 1; i++)
 		{
 			tmp.add(array[i]);
-		}
-
-		if (tmp.size() != adjMatrix.size())
-		{
-			throw new Exception();
 		}
 
 		ans.add(tmp);
@@ -98,22 +135,46 @@ public class Solver
 		return builder.toString();
 	}
 
-	public String a3(String input) throws Exception
+	public String a3Expectancy(String input) throws Exception
 	{
-		// TODO
+		checkMatrix();
+		double array[] = parseDouble(input);
 
-		return "";
+		if (array.length != adjMatrix.size() + 1)
+		{
+			throw new Exception("Expected input: <array of length " + adjMatrix.size() + "> <steps>");
+		}
+
+		int steps = (int)array[array.length - 1];
+
+		ArrayList < ArrayList < Double > > powered = matrixHelper.binPowMatrix(adjMatrix, steps);
+		
+		StringBuilder builder = new StringBuilder();
+
+		for (int i = 0; i < powered.size(); i++)
+		{
+			double val = 0.0;
+			
+			for (int j = 0; j < powered.get(i).size(); j++)
+			{
+				val += j * powered.get(i).get(j);
+			}
+
+			builder.append(val);
+			builder.append(" ");
+		}
+
+		return builder.toString();
 	}
 
-	public String b1Accesible(String input) throws Exception
+	public String b1Accessible(String input) throws Exception
 	{
-		Pattern pattern = Pattern.compile("\\s+");
-
-		int array[] = pattern.splitAsStream(input.trim()).mapToInt(Integer::parseInt).toArray();
+		checkMatrix();
+		int array[] = parseInt(input);
 		
 		if (array.length != 2)
 		{
-			throw new Exception();
+			throw new Exception("Expected input: <from vertex> <to vertex>");
 		}
 		
 		int fromState = array[0];
@@ -129,15 +190,14 @@ public class Solver
 		return "Accesible";
 	}
 	
-	public String b2Accesible(String input) throws Exception
+	public String b2Accessible(String input) throws Exception
 	{
-		Pattern pattern = Pattern.compile("\\s+");
-
-		int array[] = pattern.splitAsStream(input.trim()).mapToInt(Integer::parseInt).toArray();
+		checkMatrix();
+		int array[] = parseInt(input);
 		
 		if (array.length != 1)
 		{
-			throw new Exception();
+			throw new Exception("Expected input: <vertex>");
 		}
 		
 		int fromState = array[0];
@@ -158,15 +218,14 @@ public class Solver
 		return builder.toString();
 	}
 	
-	public String b3Meaningful(String input) throws Exception
+	public String b3Significant(String input) throws Exception
 	{
-		Pattern pattern = Pattern.compile("\\s+");
-
-		int array[] = pattern.splitAsStream(input.trim()).mapToInt(Integer::parseInt).toArray();
+		checkMatrix();
+		int array[] = parseInt(input);
 		
 		if (array.length != 1)
 		{
-			throw new Exception();
+			throw new Exception("Expected input: <vertex>");
 		}
 		
 		int fromState = array[0];
@@ -175,21 +234,20 @@ public class Solver
 
 		if (means)
 		{
-			return "Meaningful";
+			return "Significant";
 		}
 
-		return "Not meaningful";
+		return "Insignificant";
 	}
 	
 	public String b4Communicate(String input) throws Exception
 	{
-		Pattern pattern = Pattern.compile("\\s+");
-
-		int array[] = pattern.splitAsStream(input.trim()).mapToInt(Integer::parseInt).toArray();
+		checkMatrix();
+		int array[] = parseInt(input);
 		
 		if (array.length != 2)
 		{
-			throw new Exception();
+			throw new Exception("Expected input: <vertex> <vertex>");
 		}
 		
 		int firstState = array[0];
@@ -208,11 +266,7 @@ public class Solver
 
 	public String b5EqualityClasses(String input) throws Exception
 	{
-		if (input.length() != 0)
-		{
-			throw new Exception();
-		}
-	
+		checkMatrix();
 		ArrayList < ArrayList < Integer > > components = graphHelper.strongComponents(adjMatrix);
 
 		StringBuilder builder = new StringBuilder();
@@ -237,11 +291,7 @@ public class Solver
 
 	public String b6Absorbing(String input) throws Exception
 	{
-		if (input.length() != 0)
-		{
-			throw new Exception();
-		}
-
+		checkMatrix();
 		StringBuilder builder = new StringBuilder();
 
 		for (int i = 0; i < adjMatrix.size(); i++)
@@ -269,11 +319,7 @@ public class Solver
 	
 	public String c1Irreducible(String input) throws Exception
 	{
-		if (input.length() != 0)
-		{
-			throw new Exception();
-		}
-	
+		checkMatrix();
 		ArrayList < ArrayList < Integer > > components = graphHelper.strongComponents(adjMatrix);
 
 		StringBuilder builder = new StringBuilder();
@@ -291,13 +337,9 @@ public class Solver
 		return builder.toString();
 	}
 	
-	public String c2AllMeaningful(String input) throws Exception
+	public String c2AllSignificant(String input) throws Exception
 	{
-		if (input.length() != 0)
-		{
-			throw new Exception();
-		}
-	
+		checkMatrix();
 		ArrayList < ArrayList < Integer > > components = graphHelper.strongComponents(adjMatrix);
 
 		StringBuilder builder1 = new StringBuilder();
@@ -305,7 +347,7 @@ public class Solver
 
 		if (components.size() == 1)
 		{
-			builder1.append("Meaningful: ");
+			builder1.append("Significant: ");
 			builder2.append("Not: ");
 
 			for (int i = 0; i < adjMatrix.size(); i++)
@@ -334,6 +376,7 @@ public class Solver
 
 	public String c3ChainPeriod(String input) throws Exception
 	{
+		checkMatrix();
 		String irred = c1Irreducible(input);
 
 		if (irred.equals("Irreducible"))
@@ -377,6 +420,7 @@ public class Solver
 
 	public String c4AllRecurrent(String input) throws Exception
 	{
+		checkMatrix();
 		ArrayList < ArrayList < Double > > values = new ArrayList<>();
 		ArrayList < ArrayList < Double > > newMatrix = matrixHelper.copyMatrix(adjMatrix);
 
@@ -414,8 +458,6 @@ public class Solver
 				builder.append(i);
 				builder.append(" ");
 			}
-
-			System.out.println(ans);
 		}
 
 		return builder.toString();
@@ -423,6 +465,7 @@ public class Solver
 
 	public String c5AllPeriodical(String input) throws Exception
 	{
+		checkMatrix();
 		ArrayList < ArrayList < Double > > values = new ArrayList<>();
 		ArrayList < ArrayList < Double > > newMatrix = matrixHelper.copyMatrix(adjMatrix);
 
@@ -475,6 +518,7 @@ public class Solver
 
 	public String c6Ergodic(String input) throws Exception
 	{
+		checkMatrix();
 		for (int i = 0; i < adjMatrix.size(); i++)
 		{
 			for (int j = 0; j < adjMatrix.get(i).size(); j++)
@@ -515,7 +559,7 @@ public class Solver
 			steps *= 2;
 		}
 
-		builder.append("Real: ");
+		builder.append("Theoretical: ");
 
 		for (int i = 0; i < ans.size(); i++)
 		{
