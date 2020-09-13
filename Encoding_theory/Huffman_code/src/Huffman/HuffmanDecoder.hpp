@@ -76,24 +76,42 @@ public:
 
         ifstream in(fileName, ios::binary);
 
-        char size;
+        char size, blockSize, lastBlockSize;
         in.read(&size, 1);
+        in.read(&blockSize, 1);
+        in.read(&lastBlockSize, 1);
 
         heap.push(new Node());
 
         for (int i = 0; i < (int)size; i++)
         {
-            char data;
+            char symbol;
+            string data = "";
             string code = "";
 
-            in.read(&data, 1);
+            if (i == (int)size - 1)
+            {
+                for (int j = 0; j < (int)lastBlockSize; j++)
+                {
+                    in.read(&symbol, 1);
+                    data += string(1, symbol);
+                }
+            }
+            else
+            {
+                for (int j = 0; j < (int)blockSize; j++)
+                {
+                    in.read(&symbol, 1);
+                    data += string(1, symbol);
+                }
+            }
 
             unsigned char haffCode[16];
-            in.read((char*)haffCode, 16);
+            in.read((char *)haffCode, 16);
 
-            for (int i = 0; i < 16; i++)
-            {                
-                code += util->decimalToBinary(haffCode[i]);             
+            for (int j = 0; j < 16; j++)
+            {
+                code += util->decimalToBinary(haffCode[j]);
             }
 
             int j = 0;
@@ -103,7 +121,7 @@ public:
             }
 
             code = code.substr(j + 1);
-            build(code, string(1, data));
+            build(code, data);
         }
 
         in.close();
@@ -114,14 +132,16 @@ public:
         ifstream in(inputFileName, ios::binary);
         ofstream out(fileName);
 
-        char size;
+        char size, blockSize, lastBlockSize;
         in.read(&size, 1);
+        in.read(&blockSize, 1);
+        in.read(&lastBlockSize, 1);
 
         in.seekg(-1, ios::end);
         char zerosAppended;
         in.read(&zerosAppended, 1);
 
-        in.seekg(1 + (1 + 16) * size, ios::beg); // text start
+        in.seekg(2 + ((int)blockSize + 16) * (size - 1) + lastBlockSize + 16, ios::beg); // text start
 
         vector<unsigned char> text;
         char symbol;
@@ -169,6 +189,6 @@ public:
     {
         delete util;
 
-        //cleanTree(heap.top());
+        cleanTree(heap.top());
     }
 };

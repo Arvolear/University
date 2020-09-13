@@ -21,6 +21,8 @@ private:
 
 	string inputFileName;
 
+	int blockSize, lastBlockSize;
+
 	void calculateCodes(Node *root, string ans)
 	{
 		if (root == nullptr)
@@ -30,7 +32,7 @@ private:
 
 		if (root->left == nullptr && root->right == nullptr)
 		{
-			root->code = ans;			
+			root->code = ans;
 		}
 
 		calculateCodes(root->left, ans + "0");
@@ -77,9 +79,12 @@ private:
 	}
 
 public:
-	HuffmanEncoder()
+	HuffmanEncoder(int blockSize)
 	{
 		util = new Util();
+
+		this->blockSize = blockSize;
+		this->lastBlockSize = blockSize;
 	}
 
 	void read(string fileName)
@@ -87,16 +92,27 @@ public:
 		inputFileName = fileName;
 
 		ifstream in(fileName);
-		char symbol;
 
-		while (in.get(symbol))
+		while (in.peek() != EOF)
 		{
-			if (codesTable.find(string(1, symbol)) == codesTable.end())
+			string symbols = "";
+			char symbol;
+
+			int i = 0;
+			while (i < blockSize && in.get(symbol))
 			{
-				codesTable[string(1, symbol)] = new Node(string(1, symbol), 0);
+				symbols += string(1, symbol);
+				i++;
 			}
 
-			codesTable[string(1, symbol)]->freq += 1;
+			lastBlockSize = symbols.length();
+
+			if (codesTable.find(symbols) == codesTable.end())
+			{
+				codesTable[symbols] = new Node(symbols, 0);
+			}
+
+			codesTable[symbols]->freq += 1;
 		}
 
 		in.close();
@@ -112,6 +128,8 @@ public:
 		string code = "";
 
 		res += (char)codesTable.size();
+		res += (char)blockSize;
+		res += (char)lastBlockSize;
 
 		/* Creating table to decode */
 		for (auto &pair : codesTable)
@@ -123,8 +141,8 @@ public:
 			code += pair.second->code;
 
 			for (int i = 0; i < 16; i++)
-			{				
-				res += (char)util->binaryToDecimal(code.substr(0, 8));				
+			{
+				res += (char)util->binaryToDecimal(code.substr(0, 8));
 				code = code.substr(8);
 			}
 
@@ -134,9 +152,18 @@ public:
 		ifstream in(inputFileName);
 		char symbol;
 
-		while (in.get(symbol))
+		while (in.peek() != EOF)
 		{
-			code += codesTable[string(1, symbol)]->code;
+			string symbols = "";
+
+			int i = 0;
+			while (i < blockSize && in.get(symbol))
+			{
+				symbols += string(1, symbol);
+				i++;
+			}
+
+			code += codesTable[symbols]->code;
 
 			while (code.length() > 8)
 			{
