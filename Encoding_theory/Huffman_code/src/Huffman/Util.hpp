@@ -30,7 +30,7 @@ public:
             decimal /= 2;
         }
 
-        res.append(8 - binTmp.length(), '0'); // make the whole byte
+        res.append((((int)binTmp.length() - 1) / 8 + 1) * 8 - (int)binTmp.length(), '0'); // make the whole byte
 
         for (int i = binTmp.length() - 1; i >= 0; i--)
         {

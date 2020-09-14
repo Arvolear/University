@@ -71,25 +71,38 @@ public:
     }
 
     void read(string fileName)
-    {
+    {        
         inputFileName = fileName;
 
         ifstream in(fileName, ios::binary);
 
-        char size, blockSize, lastBlockSize;
-        in.read(&size, 1);
+        string tableSize = "";
+        int size;
+        unsigned char helpSize[4];       
+
+        in.read((char*)helpSize, 4);
+        
+        for (int i = 0; i < 4; i++)
+        {
+            tableSize += util->decimalToBinary(helpSize[i]); 
+        }
+        
+        size = util->binaryToDecimal(tableSize);
+
+        char blockSize, lastBlockSize;
+
         in.read(&blockSize, 1);
         in.read(&lastBlockSize, 1);
 
         heap.push(new Node());
 
-        for (int i = 0; i < (int)size; i++)
+        for (int i = 0; i < size; i++)
         {
             char symbol;
             string data = "";
             string code = "";
 
-            if (i == (int)size - 1)
+            if (i == size - 1)
             {
                 for (int j = 0; j < (int)lastBlockSize; j++)
                 {
@@ -122,7 +135,7 @@ public:
 
             code = code.substr(j + 1);
             build(code, data);
-        }
+        }        
 
         in.close();
     }
@@ -130,10 +143,22 @@ public:
     void write(string fileName)
     {
         ifstream in(inputFileName, ios::binary);
-        ofstream out(fileName);
+        ofstream out(fileName);        
 
-        char size, blockSize, lastBlockSize;
-        in.read(&size, 1);
+        string tableSize = "";
+        int size;
+        unsigned char helpSize[4];
+
+        in.read((char *)helpSize, 4);
+        
+        for (int i = 0; i < 4; i++)
+        {
+            tableSize += util->decimalToBinary(helpSize[i]);
+        }
+        size = util->binaryToDecimal(tableSize);
+
+        char blockSize, lastBlockSize;
+        
         in.read(&blockSize, 1);
         in.read(&lastBlockSize, 1);
 
@@ -141,7 +166,7 @@ public:
         char zerosAppended;
         in.read(&zerosAppended, 1);
 
-        in.seekg(2 + ((int)blockSize + 16) * (size - 1) + lastBlockSize + 16, ios::beg); // text start
+        in.seekg(4 + 2 + ((int)blockSize + 16) * (size - 1) + (int)lastBlockSize + 16, ios::beg); // text start
 
         vector<unsigned char> text;
         char symbol;
@@ -149,21 +174,21 @@ public:
         while (in.read(&symbol, 1))
         {
             text.push_back(symbol);
-        }
+        }        
 
         Node *root = heap.top();
 
         for (int i = 0; i < (int)text.size() - 1; i++)
-        {
+        {            
             string path = util->decimalToBinary(text[i]);
 
             if (i == (int)text.size() - 2)
             {
                 path = path.substr(0, 8 - zerosAppended);
-            }
+            }            
 
             for (size_t j = 0; j < path.size(); j++)
-            {
+            {                
                 if (path[j] == '0')
                 {
                     root = root->left;
@@ -174,7 +199,7 @@ public:
                 }
 
                 if (root->left == nullptr && root->right == nullptr)
-                {
+                {                    
                     out << root->data;
                     root = heap.top();
                 }

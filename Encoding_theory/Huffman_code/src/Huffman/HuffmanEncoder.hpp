@@ -8,6 +8,7 @@
 #include <vector>
 #include <unordered_map>
 #include <fstream>
+#include <algorithm>
 
 using namespace std;
 
@@ -63,6 +64,7 @@ private:
 		}
 
 		calculateCodes(heap.top(), "");
+		heap.top()->code = "0";
 	}
 
 	void cleanTree(Node *root)
@@ -127,12 +129,34 @@ public:
 		string res = "";
 		string code = "";
 
-		res += (char)codesTable.size();
+		string tableSize = util->decimalToBinary(codesTable.size());		
+
+		for (int i = 0; i < 4 - (int)tableSize.length() / 8; i++)
+		{
+			res += (char)0;
+		}
+
+		while (tableSize.length() > 0)
+		{
+			res += (char)util->binaryToDecimal(tableSize.substr(0, 8));
+			tableSize = tableSize.substr(8);
+		}
+
 		res += (char)blockSize;
 		res += (char)lastBlockSize;
 
-		/* Creating table to decode */
+		vector<pair<string, Node *>> rightSeq;
+
 		for (auto &pair : codesTable)
+		{
+			rightSeq.push_back(pair);
+		}
+
+		sort(rightSeq.begin(), rightSeq.end(),
+			 [](const pair<string, Node *> &a, const pair<string, Node *> &b) { return a.first.length() > b.first.length(); });
+
+		/* Creating the table to decode */
+		for (auto &pair : rightSeq)
 		{
 			res += pair.first;
 
@@ -163,7 +187,7 @@ public:
 				i++;
 			}
 
-			code += codesTable[symbols]->code;
+			code += codesTable[symbols]->code;			
 
 			while (code.length() > 8)
 			{
