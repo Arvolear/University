@@ -75,6 +75,7 @@ public:
         inputFileName = fileName;
 
         ifstream in(fileName, ios::binary);
+        in.tie(nullptr);
 
         string tableSize = "";
         int size;
@@ -144,6 +145,8 @@ public:
     {
         ifstream in(inputFileName, ios::binary);
         ofstream out(fileName);        
+        in.tie(nullptr);
+        out.tie(nullptr);
 
         string tableSize = "";
         int size;

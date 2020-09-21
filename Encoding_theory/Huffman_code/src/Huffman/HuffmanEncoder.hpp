@@ -94,6 +94,7 @@ public:
 		inputFileName = fileName;
 
 		ifstream in(fileName);
+		in.tie(nullptr);
 
 		while (in.peek() != EOF)
 		{
@@ -125,6 +126,7 @@ public:
 	void write(string fileName)
 	{
 		ofstream out(fileName, ios::binary);
+		out.tie(nullptr);
 
 		string res = "";
 		string code = "";
@@ -174,6 +176,7 @@ public:
 		}
 
 		ifstream in(inputFileName);
+		in.tie(nullptr);
 		char symbol;
 
 		while (in.peek() != EOF)
