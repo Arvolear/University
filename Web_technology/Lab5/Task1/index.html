@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Новые селекторы</title>
+
+    <style>
+        ::selection {
+            color: #f00;
+        }
+
+        img[id^="h"] {
+            height: 300px;
+        }
+
+        img[src$=".jpg"] {
+            width: 500px;
+        }
+
+        li:first-child {
+            font-size: 150%;
+        }
+
+        li:last-child {
+            font-size: 150%;
+        }
+
+        li:nth-child(2) {
+            color: #f00;
+        }        
+    </style>
+</head>
+
+<body>
+    <p>Текст</p>
+    <p>Текст</p>
+
+    <div>Блок</div>
+    <div>Блок</div>
+
+    <img src="html5.jpg" alt="">
+    <img src="css3.jpg" alt="" id="h50">
+
+    <ul>
+        <li>
+            <a href="#">Пункт</a>
+        </li>
+        <li>
+            <a href="#">Пункт</a>
+        </li>
+        <li>
+            <a href="#">Пункт</a>
+        </li>
+    </ul>
+</body>
+
+</html>

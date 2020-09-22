@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Градиент</title>
+
+    <style>
+        div {
+            float: left;
+            height: 400px;
+            width: 500px;
+        }
+        
+        #block1 {
+            background: linear-gradient(20deg, #f00, #00f);
+        }
+        
+        #block2 {
+            background: linear-gradient(20deg, #f00 0%, #0f0 50%, #00f 100%);
+        }
+        
+        #block3 {
+            background: repeating-linear-gradient(20deg, #f00 0px, #0f0 10px);
+        }
+        
+        #block4 {
+            background: radial-gradient(#f00, #00f);
+        }
+        
+        #block5 {
+            background: radial-gradient(#f00 0%, #0f0 50%, #00f 100%);
+        }
+        
+        #block6 {
+            background: radial-gradient(circle, #f00 0%, #0f0 50%, #00f 100%);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="block1"></div>
+    <div id="block2"></div>
+    <div id="block3"></div>
+    <div id="block4"></div>
+    <div id="block5"></div>
+    <div id="block6"></div>
+</body>
+
+</html>

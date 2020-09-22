@@ -1,0 +1,153 @@
+ .body {
+     margin: 0;
+     padding: 0;
+ }
+ 
+ .header {
+     text-align: center;
+     background: #63939b;
+     padding: 20px;
+ }
+ 
+ .footer {
+     padding: 5px;
+     background: #63939b;
+     border: 3px #c4d9de;
+     border-style: double none none none;
+ }
+ 
+ .menu {
+     background: #63939b;
+     padding: 5px;
+     border: 3px #c4d9de;
+     border-style: double none double none;
+ }
+ 
+ .dropdown_content {
+     left: 0px;
+     display: none;
+     width: 100px;
+     text-align: center;
+     position: absolute;
+     background-color: #63939b;
+     border: 2px solid #fffdff;
+     z-index: 1;
+ }
+ 
+ .dropright_content {
+     top: 0px;
+     left: 100%;
+     display: none;
+     width: 100px;
+     text-align: center;
+     position: absolute;
+     background-color: #63939b;
+     border: 2px solid #fffdff;
+     z-index: 1;
+ }
+ 
+ .dropdown,
+ .dropright {
+     position: relative;
+ }
+ 
+ .dropright_sib {     
+     padding: 5px;
+ }
+ 
+ .dropright .dropright_sib:hover {
+     background: #fffdff;     
+     cursor: pointer;
+ }
+ 
+ .dropright:hover .dropright_content {
+     display: block;
+ }
+ 
+ .dropdown:hover .dropdown_content {
+     display: block;
+ }
+ 
+ .menu_item {
+     padding: 10px;
+ }
+ 
+ .top_menu {
+     padding: 5px 10px 5px 10px;
+     display: inline;
+ }
+ 
+ .left_menu {
+     text-align: center;
+     width: 75%;
+ }
+ 
+ .clickable:hover {
+     background: #fffdff;
+     cursor: pointer;
+ }
+ 
+ .right_col {
+     min-width: 150px;
+     max-width: 300px;
+     width: 25%;
+     background: #acabac;
+ }
+ 
+ .main {
+     display: flex;
+     flex-flow: column;
+     width: 100%;
+     height: 500px;
+     background: #cdcbcd;
+     min-width: 400px;
+ }
+ 
+ .left_col {
+     min-width: 150px;
+     max-width: 300px;
+     width: 25%;
+     background: #acabac;
+ }
+ 
+ .main_top {
+     text-align: center;
+     background: #c3bfc1;
+ }
+ 
+ .main_bottom {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     height: 100%;
+     font-size: 24px;
+ }
+ 
+ .column_top {
+     text-align: center;
+     background: #fffdff;
+     width: 100%;
+ }
+ 
+ .right_column_bottom {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     background: #63939b;
+     height: 50%;
+     font-size: 20px;
+     padding: 20px;
+ }
+ 
+ .left_column_bottom {
+     background: #63939b;
+     height: 50%;
+     padding: 20px;
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+ }
+ 
+ .row {
+     display: flex;
+ }
