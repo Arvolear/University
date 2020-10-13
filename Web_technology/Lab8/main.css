@@ -1,0 +1,93 @@
+book {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    line-height: 1.5em;
+    justify-content: center;
+    align-items: center;
+}
+
+page {
+    width: 600px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    display: block;
+    border: 1px solid #000000;
+    padding: 50px 40px 50px 40px;
+}
+
+colont {
+    display: block;
+    padding-bottom: 3px;
+    margin-bottom: 10px;
+    width: 100%;
+    border: 2px #000000;
+    border-style: none none double none;
+}
+
+num_page {
+    margin-left: 10px;
+}
+
+topic {
+    float: right;
+    margin-right: 10px;
+}
+
+num_page1 {
+    float: right;
+    margin-right: 10px;
+}
+
+topic1 {
+    margin-left: 10px;
+}
+
+b {
+    font-weight: bold;
+}
+
+br {
+    display: block;
+}
+
+image {
+    display: block;
+    content: url('pic.png');
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+image_description {
+    display: block;
+    text-align: center;
+    font-style: italic;
+}
+
+paragraph {
+    display: block;
+    margin-top: 10px;
+}
+
+big_paragraph {
+    display: block;
+    margin-top: 40px;
+}
+
+centered {
+    display: block;
+    text-align: center;
+}
+
+tabbed {
+    display: block;
+    text-align: left;
+    margin-left: 10%;
+}
+
+mono {
+    font-family: monospace, monospace;
+    font-size: 12px;
+}

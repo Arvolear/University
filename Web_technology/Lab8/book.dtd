@@ -1,0 +1,21 @@
+<!ELEMENT book (page+)>
+<!ELEMENT page (colont, content)>
+<!ELEMENT colont ((topic | topic_1), (num_page | num_page_1))>
+<!ELEMENT content (image*, image_description*, paragraph*, big_paragraph*)>
+<!ELEMENT topic (#PCDATA)>
+<!ELEMENT topic_1 (#PCDATA)>
+<!ELEMENT num_page (#PCDATA)>
+<!ELEMENT num_page_1 (#PCDATA)>
+<!ELEMENT image_description (#PCDATA)>
+<!ELEMENT paragraph ANY>
+<!ELEMENT big_paragraph ANY>
+<!ELEMENT centered ANY>
+<!ELEMENT tabbed ANY>
+<!ELEMENT mono ANY>
+<!ELEMENT image EMPTY>
+<!ELEMENT b (#PCDATA)>
+<!ELEMENT br EMPTY>
+
+<!ATTLIST page
+    number CDATA #REQUIRED
+>

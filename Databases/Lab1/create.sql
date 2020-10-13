@@ -106,7 +106,3 @@ USE university_task;
 
 -- ALTER TABLE project_designers ADD CONSTRAINT constr_project_designers_projects FOREIGN KEY (ref_project) REFERENCES projects (id);
 -- ALTER TABLE project_designers ADD CONSTRAINT constr_project_designers_designers FOREIGN KEY (ref_designer) REFERENCES designers (card_id);
-
-UPDATE offices SET workers = 2 WHERE id = 4;
-
-SELECT * FROM offices;
