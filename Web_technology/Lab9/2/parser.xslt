@@ -22,10 +22,7 @@
     </xsl:template>
 
     <xsl:template match="student">        
-        <xsl:if test="subject[1]/@value = 2 or 
-                    subject[2]/@value = 2 or 
-                    subject[3]/@value = 2 or 
-                    subject[4]/@value = 2">
+        <xsl:if test="subject[@value = 2]">
             <div class="student">
                 <xsl:value-of select="@surname"/>&#160;<xsl:value-of select="@name"/>&#160;<xsl:value-of select="@middlename"/>
             </div>

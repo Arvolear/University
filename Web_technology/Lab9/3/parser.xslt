@@ -16,10 +16,7 @@
                 </div>
                 <div class="content">
                     <xsl:for-each select="*">
-                        <xsl:if test="subject[1]/@value = 5 and 
-                                    subject[2]/@value = 5 and 
-                                    subject[3]/@value = 5 and 
-                                    subject[4]/@value = 5">
+                        <xsl:if test="not(subject[@value != 5])">
                             <div class="student">
                                 <xsl:value-of select="@surname"/>&#160;<xsl:value-of select="@name"/>&#160;<xsl:value-of select="@middlename"/>
                             </div>
