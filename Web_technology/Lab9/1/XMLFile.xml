@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<?xml-stylesheet type="text/xsl" href="parser.xslt"?>
+
+<group name="МФ11">
+    <student surname="Нестеренко" name="Игорь" middlename="Игоревич">
+        <subject name="Математика" value="5"/>
+        <subject name="Физика" value="5"/>
+        <subject name="Английский язык" value="5"/>
+        <subject name="Информатика" value="5"/>
+    </student>
+    <student surname="Нестеренко" name="Сергей" middlename="Игоревич">
+        <subject name="Математика" value="5"/>
+        <subject name="Физика" value="5"/>
+        <subject name="Английский язык" value="4"/>
+        <subject name="Информатика" value="0"/>
+    </student>
+    <student surname="Кравчук" name="Игорь" middlename="Игоревич">
+        <subject name="Математика" value="3"/>
+        <subject name="Физика" value="4"/>
+        <subject name="Английский язык" value="4"/>
+        <subject name="Информатика" value="0"/>
+    </student>
+    <student surname="Семченко" name="Николай" middlename="Сергеевич">
+        <subject name="Математика" value="2"/>
+        <subject name="Физика" value="3"/>
+        <subject name="Английский язык" value="4"/>
+        <subject name="Информатика" value="3"/>
+    </student>
+    <student surname="Шумнов" name="Федор" middlename="Игоревич">
+        <subject name="Математика" value="4"/>
+        <subject name="Физика" value="4"/>
+        <subject name="Английский язык" value="4"/>
+        <subject name="Информатика" value="5"/>
+    </student>
+    <student surname="Опанасенко" name="Василий" middlename="Виктрович">
+        <subject name="Математика" value="5"/>
+        <subject name="Физика" value="3"/>
+        <subject name="Английский язык" value="4"/>
+        <subject name="Информатика" value="2"/>
+    </student>
+    <student surname="Игнатенко" name="Алина" middlename="Игоревна">
+        <subject name="Математика" value="5"/>
+        <subject name="Физика" value="4"/>
+        <subject name="Английский язык" value="4"/>
+        <subject name="Информатика" value="2"/>
+    </student>
+</group>

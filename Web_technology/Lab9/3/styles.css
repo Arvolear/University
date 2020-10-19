@@ -1,0 +1,13 @@
+.title {
+    font-size: 40px;
+    padding: 20px;
+}
+
+.content {
+    border: 2px #000000;
+    border-style: double none double none;
+}
+
+.student {
+    padding: 15px;
+}
