@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Arithmetical_encoding:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Arithmetical_encoding_jar</output-path>
+    <root id="archive" name="Arithmetical_encoding.jar">
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/src/resources/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="module-output" name="Arithmetical_encoding" />
+    </root>
+  </artifact>
+</component>
