@@ -46,8 +46,8 @@ USE university_task;
 -- INNER JOIN designers ON project_designers.ref_designer = designers.card_id
 -- WHERE projects.name = 'Google.com';
 
-SELECT floor(avg(year(current_date()) - 
-    year(birthday) - 
-    (DATE_FORMAT(current_date(), '%m%d') < DATE_FORMAT(birthday, '%m%d'))))
-    AS "avg age"
-FROM managers;
+-- SELECT floor(avg(year(current_date()) - 
+--     year(birthday) - 
+--     (DATE_FORMAT(current_date(), '%m%d') < DATE_FORMAT(birthday, '%m%d'))))
+--     AS "avg age"
+-- FROM managers;
