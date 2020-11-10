@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<?xml-stylesheet type="text/xsl" href="../utils/contacts_parser.xslt"?>
+
+<company name="Кровля">
+  <address>Харьков</address>
+  <number>12-12-12</number>
+  <email>ini@it.com</email>
+</company>

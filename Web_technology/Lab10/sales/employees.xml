@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+
+<?xml-stylesheet type="text/xsl" href="../utils/employees_parser.xslt"?>
+
+<employees name="Расчетный">
+  <employee name="Анна" surname="Шаповал"/>
+  <employee name="Юлия" surname="Березняк"/>
+  <employee name="Галина" surname="Головенко"/>
+  <employee name="Марина" surname="Юдина"/>
+</employees>

@@ -1,0 +1,47 @@
+ .no_margin {
+     margin: 0;
+     padding: 0;
+ }
+ 
+ a {
+     display: block;
+     padding: 5px 0 5px 0;
+ }
+
+ header {
+     text-align: center;
+     font-size: 25px;
+     background: #619aff;
+     padding-bottom: 40px;
+ }
+ 
+ footer {
+     background: #4a75c2;
+ }
+ 
+ right {
+     width: 100%;
+     padding-left: 5px;
+ }
+ 
+ left {
+     min-width: 300px;
+ }
+ 
+ top_left {
+     display: block;
+     text-align: center;
+     background: #818081;
+ }
+ 
+ bottom_left {
+     display: block;
+     margin-top: 1px;
+     background: #818081;
+     height: 200px;
+     text-align: center;
+ }
+ 
+ main {
+     display: flex;
+ }
