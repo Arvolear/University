@@ -6,31 +6,29 @@
     <xsl:import href="template_parser.xslt"/>
 
     <xsl:template match="company">
-        <link rel="stylesheet" href="../utils/styles_contacts.css"/>
-
-        <top_main>
+        <div class="top_contracts_main">
             Контакты компании: <xsl:value-of select="@name"/>
-        </top_main>
+        </div>
 
         <xsl:apply-templates select="*"/>
     </xsl:template>
 
     <xsl:template match="address">
-        <address>
+        <div>
             Адрес: <xsl:value-of select="text()"/>
-        </address>
+        </div>
     </xsl:template>
 
     <xsl:template match="number">
-        <number>
+        <div>
             Телефон: <xsl:value-of select="text()"/>
-        </number>
+        </div>
     </xsl:template>
 
     <xsl:template match="email">
-        <email>
+        <div>
             Электронная почта: <xsl:value-of select="text()"/>
-        </email>
+        </div>
     </xsl:template>
 
 </xsl:stylesheet>

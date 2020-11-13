@@ -9,27 +9,29 @@
         <html>
             <head>
                 <link rel="stylesheet" href="../utils/styles_template.css"/>
+                <link rel="stylesheet" href="../utils/styles_contacts.css"/>
+                <link rel="stylesheet" href="../utils/styles_employees.css"/>
             </head>
             <body class="no_margin">
                 <header>
                     Кровля
                 </header>
-                <main>
-                    <left>
-                        <top_left>
+                <div class="main">
+                    <div class="left">
+                        <div class="top_left">
                             Главное меню сайта
-                        </top_left>
-                        <bottom_left>
+                        </div>
+                        <div class="bottom_left">
                             <a href="../contacts/contacts.xml">Контакты</a>
                             <a href="../sales/employees.xml">Расчетный</a>
                             <a href="../analytics/employees.xml">Аналитический</a>                            
-                        </bottom_left>                        
-                    </left>
-                    <right>
+                        </div> 
+                    </div>
+                    <div class="right">
                         <xsl:apply-templates select="/company"/>
                         <xsl:apply-templates select="/employees"/>
-                    </right>
-                </main>
+                    </div>
+                </div>
                 <footer>
                     Практическое занятие 10
                 </footer>                

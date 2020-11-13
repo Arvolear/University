@@ -6,19 +6,17 @@
     <xsl:import href="template_parser.xslt"/>
 
     <xsl:template match="employees">
-        <link rel="stylesheet" href="../utils/styles_employees.css"/>
-
-        <top_main>
+        <div class="top_employees_main">
             Список сотрудников отдела: <xsl:value-of select="@name"/>
-        </top_main>
+        </div>
 
         <xsl:apply-templates select="*"/>
     </xsl:template>
 
     <xsl:template match="employee">
-        <employee>
+        <div>
             <xsl:value-of select="@name"/>&#160;<xsl:value-of select="@surname"/>
-        </employee>
+        </div>
     </xsl:template>   
 
 </xsl:stylesheet>
