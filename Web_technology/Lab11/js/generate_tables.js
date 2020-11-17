@@ -1,51 +1,67 @@
 function genMatrix(name)
 {
-    let html = '';
-
-    html += '<table>\n';
+    let table = document.createElement('table');
 
     for (let i = 0; i < 3; i++)
     {
-        html += '<tr>\n';
+        let tr = document.createElement('tr');        
 
         for (let j = 0; j < 3; j++)
         {
-            html += '<td>\n' +
-                '<input type="text" name="' + name + i.toString() + j.toString() + '" value="">\n' +
-                '</td>\n';
+            let td = document.createElement('td');
+
+            let input = document.createElement('input');
+            input.setAttribute('type', 'text');
+            input.setAttribute('name', name + i.toString() + j.toString());
+            input.setAttribute('value', '');
+
+            td.appendChild(input);
+            tr.appendChild(td);
         }
+
+        table.appendChild(tr);
     }
 
-    html += '</table>\n';
-
-    return html;
+    return table;
 }
 
-let html = ''
+function createButton()
+{
+    let input = document.createElement('input');
+    input.setAttribute('type', 'button');
+    input.setAttribute('name', 'mult');
+    input.setAttribute('value', 'Умножение');
+    input.setAttribute('onclick', 'multiply(3, 3, 3, 3)');
 
-html += '<div class="table_in">\n';
-html += 'Матрица A:\n';
-html += '<br>\n'
-html += '<br>\n'
-html += genMatrix('a');
+    return input;
+}
 
-html += '<br>\n'
-html += 'Матрица B:\n';
-html += '<br>\n'
-html += '<br>\n'
-html += genMatrix('b');
-html += '</div>\n';
+let tableIn = document.createElement('div');
+tableIn.classList.add('table_in');
 
-html += '<div class="table_out">\n'
-html += '<br>\n'
-html += '<input type="button" name="mult" value="Умножение" onclick="multiply(3, 3, 3, 3)">\n'
-html += '<br>\n'
-html += '<br>\n'
+tableIn.appendChild(document.createTextNode('Матрица A:'));
+tableIn.appendChild(document.createElement('br'));
+tableIn.appendChild(document.createElement('br'));
+tableIn.appendChild(genMatrix('a'));
 
-html += 'Результат:\n';
-html += '<br>\n'
-html += '<br>\n'
-html += genMatrix('res');
-html += '</div>\n';
+tableIn.appendChild(document.createElement('br'));
+tableIn.appendChild(document.createTextNode('Матрица B:'));
+tableIn.appendChild(document.createElement('br'));
+tableIn.appendChild(document.createElement('br'));
+tableIn.appendChild(genMatrix('b'));
 
-document.body.innerHTML = html
+let tableOut = document.createElement('div');
+tableOut.classList.add('table_out');
+
+tableOut.appendChild(document.createElement('br'));
+tableOut.appendChild(createButton());
+tableOut.appendChild(document.createElement('br'));
+tableOut.appendChild(document.createElement('br'));
+
+tableOut.appendChild(document.createTextNode('Результат:'));
+tableOut.appendChild(document.createElement('br'));
+tableOut.appendChild(document.createElement('br'));
+tableOut.appendChild(genMatrix('res'));
+
+document.body.appendChild(tableIn);
+document.body.appendChild(tableOut);
