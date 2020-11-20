@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Lab13</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
+    <div class="content">
+        <div class="form_name">
+            Форма ввода данных:
+        </div>
+        <form>
+            <label class="title">
+                Введите данные
+            </label>
+            <br>
+            <label class="field_name">Фамилия:</label>
+            <input type="text" id="surname" name="surname">
+            <br>
+            <label class="field_name" for="position">Должность:</label>
+            <select name="position" id="position">
+                <option value="Аналитик">Аналитик</option>
+                <option value="Экономист">Экономист</option>
+                <option value="Бухгалтер">Бухгалтер</option>
+                <option value="Программист">Программист</option>
+            </select>
+            <br>
+            <input class="submit" type="button" id="submit" value="Отправка" onclick="callServer()">
+        </form>
+    </div>
+
+    <script src="./js/call_server.js"></script>
+</body>
+
+</html>

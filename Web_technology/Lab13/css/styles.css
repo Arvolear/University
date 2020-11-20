@@ -1,0 +1,54 @@
+.content {
+    width: 30%;
+}
+
+.form_name {
+    text-align: center;
+    font-size: 24px;
+    background-color: aqua;
+}
+
+.field_name {
+    width: 150px;
+    display: inline-block;
+    padding: 5px 0 5px 0;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 20px;
+    display: inline-block;
+    padding: 5px 0 5px 0;
+}
+
+.submit {
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.all {
+    width: 40%;
+}
+
+.response_content {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.response_title {
+    flex: 100%;
+    font-size: 24px;
+    text-align: center;
+}
+
+table, td {
+    border: 1px solid black;
+}
+
+table {
+    flex: 100%;
+    width: 50%;
+}

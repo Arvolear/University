@@ -1,11 +1,7 @@
 import { Matrix } from "./matrix.js";
 
 export class MatrixManipulator
-{
-    constructor()
-    {        
-    }
-
+{    
     #from(name, dimension)
     {
         let res = new Array(dimension);
@@ -38,6 +34,10 @@ export class MatrixManipulator
                 document.getElementById(name + i.toString() + j.toString()).value = matrix.getInnerMatrix()[i][j];                
             }
         }
+    }
+
+    constructor()
+    {
     }
 
     multiply(dimension)
