@@ -66,7 +66,7 @@ USE university_task;
 -- WHERE NOT EXISTS
 -- (SELECT * FROM managers WHERE ref_office = id);
 
-SELECT sum(
+-- SELECT sum(
 -- (SELECT count(*) FROM managers WHERE skill_level = "Junior") +
 -- (SELECT count(*) FROM programmers WHERE skill_level = "Junior") +
 -- (SELECT count(*) FROM designers WHERE skill_level = "Junior")) AS "total juniors";

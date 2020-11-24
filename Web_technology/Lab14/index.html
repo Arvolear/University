@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Lab14</title>
+    <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
+    <div class="content">
+        <div class="bottom_border">
+            Размер окна графики: 500x500. Начало координат - верхний левый угол.
+        </div>
+        <div class="bottom_border">
+            <label for="x_file">x:</label>
+            <input type="text" id="x_file" autocomplete="false">
+            <label for="y_file">y:</label>
+            <input type="text" id="y_file" autocomplete="false">
+            <br>
+            <label for="file">Файл координат:</label>
+            <input class="file_chooser" type="file" id="file" onchange="readFile()">
+        </div>
+        <div class="bottom_border">
+            <label for="x_text">x:</label>
+            <input type="text" id="x_text" autocomplete="false">
+            <label for="y_text">y:</label>
+            <input type="text" id="y_text" autocomplete="false">
+            <label for="text">text:</label>
+            <input type="text" id="text" autocomplete="false">
+            <input type="button" id="button" value="Вывести текст" onclick="drawText()">
+        </div>
+
+        <canvas class="canvas" id="canvas" width="500" height="500"></canvas>
+    </div>
+
+    <script src="./js/main.js"></script>
+</body>
+
+</html>
