@@ -1,7 +1,5 @@
 let params = (new URL(document.location)).searchParams;
 
-console.log(params.toString());
-
 let all = document.createElement('div');
 all.classList.add('all');
 

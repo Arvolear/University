@@ -18,7 +18,7 @@ private:
              << "\t -d or --decode <input bytes> - decode the bytes\n"
              << "\nExamples:\n"
              << "\t ./crc -e 100101100\n"
-             << "\t ./crc -d \n";
+             << "\t ./crc -d 1001011001010101\n";
     }
 
     void encode(const string &inBytes)
