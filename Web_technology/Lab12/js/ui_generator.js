@@ -16,7 +16,7 @@ export class UIGenerator
             input.classList.add('blue_button');
             input.setAttribute('type', 'button');
             input.setAttribute('id', i + 'x' + i);
-            input.setAttribute('value', i + 'x' + i);            
+            input.setAttribute('value', i + 'x' + i);
 
             dimensions.appendChild(input);
         }

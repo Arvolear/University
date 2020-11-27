@@ -1,0 +1,95 @@
+body {
+    background-color: #111111;
+}
+
+svg {
+    border-radius: 10px;
+    background-color: #555555;
+    padding: 20px;
+    margin: 20px;
+}
+
+.axis_line {
+    stroke: #eeeeee;
+    stroke-width: 2px;
+}
+
+.chart_line {
+    stroke: #f7e2e2;
+    stroke-width: 2px;
+    fill: none;    
+}
+
+.content {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.buttons {
+    width: 50%;
+    padding: 20px 0 20px 0;
+    display: flex;
+}
+
+.blue_button {
+    flex: 100%;
+    padding: 5px;
+    border-radius: 10px;
+    background: #3c8cf5;
+    border: 2px solid #111111;
+    color: #333333;
+    font-size: 25px;
+    font-family: 'Aldrich';
+    font-weight: bold;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.blue_button:focus {
+    border: 2px solid #3c8cf5;
+    color: #eeeeee;
+    outline: none;
+}
+
+.red_button {
+    flex: 100%;
+    padding: 5px;
+    border-radius: 10px;
+    background: #f44336;
+    border: 2px solid #111111;
+    color: #333333;
+    font-size: 25px;
+    font-family: 'Aldrich';
+    font-weight: bold;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.red_button:focus {
+    border: 2px solid #f44336;
+    color: #eeeeee;
+    outline: none;
+}
+
+.green_button {
+    flex: 100%;
+    padding: 5px;
+    border-radius: 10px;
+    background: #33d155;
+    border: 2px solid #111111;
+    color: #333333;
+    font-size: 25px;
+    font-family: 'Aldrich';
+    font-weight: bold;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.green_button:focus {
+    border: 2px solid #33d155;
+    color: #eeeeee;
+    outline: none;
+}

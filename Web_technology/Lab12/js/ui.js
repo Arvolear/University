@@ -25,7 +25,7 @@ export class UI
         document.getElementById('clear').addEventListener('click', function () 
         {
             ui.#uiGenerator.generateStuff(ui.#uiGenerator.getCurrentMatrixDimension());
-            ui.#attachEventListeners(ui);            
+            ui.#attachEventListeners(ui);
         });
     }
 
