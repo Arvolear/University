@@ -2,22 +2,11 @@ body {
     background-color: #111111;
 }
 
-svg {
+canvas {
     border-radius: 10px;
     background-color: #555555;
     padding: 20px;
     margin: 20px;
-}
-
-.axis_line {
-    stroke: #eeeeee;
-    stroke-width: 2px;
-}
-
-.chart_line {
-    stroke: #f7e2e2;
-    stroke-width: 2px;
-    fill: none;    
 }
 
 .content {
@@ -38,7 +27,7 @@ svg {
     flex: 100%;
     padding: 5px;
     border-radius: 10px;
-    background: #3c8cf5;
+    background: #3cabf5;
     border: 2px solid #111111;
     color: #333333;
     font-size: 25px;
@@ -49,7 +38,7 @@ svg {
 }
 
 .blue_button:focus {
-    border: 2px solid #3c8cf5;
+    border: 2px solid #3cabf5;
     color: #eeeeee;
     outline: none;
 }
