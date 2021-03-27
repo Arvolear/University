@@ -44,20 +44,20 @@ USE university_task;
 
 -- DELETE FROM managers WHERE full_name = "ASD";
 
-DROP TRIGGER IF EXISTS updateOfficeUpdate;
+-- DROP TRIGGER IF EXISTS updateOfficeUpdate;
 
-CREATE TRIGGER updateOfficeUpdate BEFORE UPDATE ON managers
-FOR EACH ROW 
-BEGIN
-    IF EXISTS (SELECT * FROM managers WHERE office_place = NEW.office_place AND ref_office = NEW.ref_office) THEN
-        SIGNAL sqlstate '45001' SET message_text = "Duplicate office place";
-    END IF;
+-- CREATE TRIGGER updateOfficeUpdate BEFORE UPDATE ON managers
+-- FOR EACH ROW 
+-- BEGIN
+--     IF EXISTS (SELECT * FROM managers WHERE office_place = NEW.office_place AND ref_office = NEW.ref_office) THEN
+--         SIGNAL sqlstate '45001' SET message_text = "Duplicate office place";
+--     END IF;
 
-    IF EXISTS (SELECT * FROM programmers WHERE office_place = NEW.office_place AND ref_office = NEW.ref_office) THEN
-        SIGNAL sqlstate '45001' SET message_text = "Duplicate office place";
-    END IF;
+--     IF EXISTS (SELECT * FROM programmers WHERE office_place = NEW.office_place AND ref_office = NEW.ref_office) THEN
+--         SIGNAL sqlstate '45001' SET message_text = "Duplicate office place";
+--     END IF;
 
-    IF EXISTS (SELECT * FROM designers WHERE office_place = NEW.office_place AND ref_office = NEW.ref_office) THEN
-        SIGNAL sqlstate '45001' SET message_text = "Duplicate office place";
-    END IF;
-END;
+--     IF EXISTS (SELECT * FROM designers WHERE office_place = NEW.office_place AND ref_office = NEW.ref_office) THEN
+--         SIGNAL sqlstate '45001' SET message_text = "Duplicate office place";
+--     END IF;
+-- END;
