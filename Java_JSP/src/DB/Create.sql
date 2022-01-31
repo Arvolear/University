@@ -1,0 +1,23 @@
+CREATE USER 'jsp'@'localhost' IDENTIFIED BY 'jsp';
+GRANT ALL PRIVILEGES ON * . * TO 'jsp'@'localhost';
+
+DROP DATABASE IF EXISTS jsp_db;
+CREATE DATABASE jsp_db;
+
+USE jsp_db;
+
+CREATE TABLE User (
+    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+	email VARCHAR(50) UNIQUE NOT NULL,
+	nick VARCHAR(50) UNIQUE NOT NULL,
+    password VARCHAR(512) NOT NULL
+);
+
+CREATE TABLE Session (
+    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    ref_user INT NOT NULL,
+    auth_token VARCHAR(100) UNIQUE NOT NULL,
+    valid_through TIMESTAMP NOT NULL
+);
+
+ALTER TABLE Session ADD CONSTRAINT constr_session_user FOREIGN KEY (ref_user) REFERENCES User (id) ON DELETE CASCADE;
