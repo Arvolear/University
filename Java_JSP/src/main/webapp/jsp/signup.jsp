@@ -5,31 +5,36 @@
 <html>
 <head>
     <link href='https://fonts.googleapis.com/css?family=Aldrich' rel='stylesheet'>
-    <link rel="stylesheet" href="./global_styles.css">
-    <link rel="stylesheet" href="./login_styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/global_styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/styles/login_styles.css">
 
     <title>Login</title>
 </head>
 
 <body>
     <div class="login_header">
-        <span>Login page</span>
+        <span>Sign up page</span>
     </div>
 
     <div class="login_card">
         <div class="space"></div>
         <div class="login_question">
             <div class="login_title">
-                <span>Login</span>
+                <span>Sign up</span>
             </div>
-            <form autocomplete="off" action="${pageContext.request.contextPath}/api/login" method="post">
+            <form autocomplete="off" action="${pageContext.request.contextPath}/api/signup" method="post">
                 <br>
-                <label for="login_field">Your login:</label>
+                <label for="nickname_field">Your nickname:</label>
+                <input class="green_text" type="text" name="nickname">
+                <label for="login_field">Your email:</label>
                 <input class="green_text" type="text" name="email">
                 <label for="password_field">Your password:</label>
                 <input class="green_text" type="password" name="password">
                 <div class="space"></div>
-                <input class="white_submit" type="submit" value="login" name="login">
+                <input class="pink_submit" type="submit" value="Sign up" name="signup">
+            </form>
+            <form autocomplete="off" action="${pageContext.request.contextPath}/login">
+                <input class="pale_submit" type="submit" value="Have an account?" name="login">
             </form>
         </div>
     </div>

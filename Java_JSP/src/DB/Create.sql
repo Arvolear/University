@@ -20,4 +20,12 @@ CREATE TABLE Session (
     valid_through TIMESTAMP NOT NULL
 );
 
+CREATE TABLE Score (
+    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    email VARCHAR(50) UNIQUE NOT NULL,
+    score INT NOT NULL
+);
+
 ALTER TABLE Session ADD CONSTRAINT constr_session_user FOREIGN KEY (ref_user) REFERENCES User (id) ON DELETE CASCADE;
+
+UPDATE Score SET score=1230 WHERE email="test@gmail.com"

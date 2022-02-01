@@ -3,7 +3,7 @@ package common;
 import org.apache.commons.codec.digest.DigestUtils;
 
 public class PasswordHasher {
-    private Environment environment;
+    private final Environment environment;
 
     public PasswordHasher(Environment environment) {
         this.environment = environment;

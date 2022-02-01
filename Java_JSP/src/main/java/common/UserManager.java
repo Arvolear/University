@@ -48,6 +48,11 @@ public class UserManager {
             ps.setString(3, passwordHasher.hash(password));
             ps.executeUpdate();
 
+            ps = dbHelper.connection.prepareStatement(SqlQueryStorage.CREATE_SCORE);
+            ps.setString(1, email);
+            ps.setInt(2, 0);
+            ps.executeUpdate();
+
             ps = dbHelper.connection.prepareStatement(SqlQueryStorage.GET_USER_BY_EMAIL);
             ps.setString(1, email);
             resultSet = ps.executeQuery();

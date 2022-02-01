@@ -1,7 +1,6 @@
 package common;
 
 public class SqlQueryStorage {
-    // field names
     public static final String USER_NICKNAME = "nick";
     public static final String USER_EMAIL = "email";
     public static final String USER_ID = "id";
@@ -10,6 +9,8 @@ public class SqlQueryStorage {
     public static final String SESSION_AUTH_TOKEN = "auth_token";
     public static final String SESSION_USER = "ref_user";
     public static final String SESSION_VALID_THROUGH = "valid_through";
+
+    public static final String SCORE = "score";
 
     public static final String USER_AUTH = String.format("SELECT %s, %s from User WHERE %s = ? and %s = ?",
             USER_ID, USER_NICKNAME, USER_EMAIL, USER_PASSWORD);
@@ -31,4 +32,8 @@ public class SqlQueryStorage {
 
     public static final String GET_AUTH_TOKEN_DATA = String.format("SELECT %s, %s from Session WHERE %s = ?",
             SESSION_USER, SESSION_VALID_THROUGH, SESSION_AUTH_TOKEN);
+
+    public static final String CREATE_SCORE = String.format("INSERT INTO Score(%s, %s) values(?, ?)", USER_EMAIL, SCORE);
+    public static final String UPDATE_SCORE = String.format("UPDATE Score SET %s = ? WHERE %s = ?", SCORE, USER_EMAIL);
+    public static final String GET_SCORE_BY_EMAIL = String.format("SELECT %s FROM Score WHERE %s = ?", SCORE, USER_EMAIL);
 }
