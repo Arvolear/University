@@ -1,0 +1,61 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Aldrich' rel='stylesheet'>
+    <link href="https://fonts.googleapis.com/css2?family=Nova+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/global_styles.css}">
+    <link rel="stylesheet" th:href="@{/game_styles.css}">
+
+    <title>Game</title>
+</head>
+
+<body>
+    <script th:inline="javascript">
+        const gameApiUrl = [[@{/api/game}]];
+        const logoutApiUrl = [[@{/api/logout}]];
+        const loginUrl = [[@{/login}]];
+
+        const xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() {
+            if (xmlHttp.readyState == 4) {
+                if (xmlHttp.status == 400) {
+                    window.location.replace(loginUrl);
+                } else if (xmlHttp.status == 200) {
+                    document.getElementById("score").innerHTML = xmlHttp.responseText;
+                }
+            }
+        }
+
+        xmlHttp.open("GET", gameApiUrl, true);
+        xmlHttp.send(null);
+
+        function doClick() {
+            const xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function() {
+                if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                    document.getElementById("score").innerHTML = xmlHttp.responseText;
+                }
+            }
+
+            xmlHttp.open("POST", gameApiUrl, true);
+            xmlHttp.send(null);
+        }
+
+        function logout() {
+            window.location.replace(logoutApiUrl);
+        }
+    </script>
+
+    <div class="background">
+        <p class="score_me" id="score"></p>
+    </div>
+    <div class="content">
+        <div class="logout_div">
+            <button class="logout_me" onclick="logout()">Logout</button>
+        </div>
+        <div class="click_div">
+            <button class="click_me" onclick="doClick()">Click me hard</button>
+        </div>
+    </div>
+</body>
+</html>

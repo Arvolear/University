@@ -1,0 +1,93 @@
+.click_div {
+    position: fixed;
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+}
+
+.click_me:hover {
+    color: #eeeeee;
+}
+
+.click_me:focus {
+    outline: none;
+}
+
+.click_me {
+    margin: 0 0 75px 0;
+    width: 300px;
+    height: 300px;
+    border-radius: 150px;
+    background: #759fd9;
+    border: 10px solid #a87ac7;
+    color: #333333;
+    font-size: 25px;
+    font-family: 'Aldrich';
+    font-weight: bold;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.click_me:active {
+    border: 10px solid #d97a75;
+    outline: none;
+}
+
+.score_me {
+    color: #333333;
+    font-size: 800px;
+    font-family: 'Nova Mono', monospace;
+}
+
+.background {
+   position: absolute;
+   top: 0;
+   left: 0;
+   bottom: 0;
+   right: 0;
+   z-index: -1;
+   overflow: hidden;
+   display: flex;
+   flex-flow: column;
+   justify-content: center;
+   align-items: center;
+}
+
+.logout_div {
+    display: flex;
+    flex-flow: column;
+    align-items: end;
+    height: 100%;
+    width: 100%;
+}
+
+.logout_me:hover {
+    color: #eeeeee;
+}
+
+.logout_me:focus {
+    outline: none;
+}
+
+.logout_me {
+    width: 100px;
+    padding: 5px;
+    margin: 5px;
+    border-radius: 5px;
+    background: #a3749a;
+    border: 2px solid #111111;
+    color: #333333;
+    font-size: 20px;
+    font-family: 'Aldrich';
+    font-weight: bold;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.logout_me:active {
+    border: 2px solid #a3749a;
+    outline: none;
+}

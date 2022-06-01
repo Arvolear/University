@@ -1,0 +1,52 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href='https://fonts.googleapis.com/css?family=Aldrich' rel='stylesheet'>
+    <link rel="stylesheet" th:href="@{/global_styles.css}">
+    <link rel="stylesheet" th:href="@{/login_styles.css}">
+
+    <title>Login</title>
+</head>
+
+<body>
+    <script th:inline="javascript">
+        const gameUrl = [[@{/game}]];
+        const loginApiUrl = [[@{/api/login}]];
+
+        const xmlHttp = new XMLHttpRequest();
+        xmlHttp.onreadystatechange = function() {
+            if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+                window.location.replace(gameUrl);
+            }
+        }
+
+        xmlHttp.open("GET", loginApiUrl, true);
+        xmlHttp.send(null);
+    </script>
+
+    <div class="login_header">
+        <span>Login page</span>
+    </div>
+
+    <div class="login_card">
+        <div class="space"></div>
+        <div class="login_question">
+            <div class="login_title">
+                <span>Login</span>
+            </div>
+            <form autocomplete="off" th:action="@{/api/login}" method="post">
+                <br>
+                <label>Your email:</label>
+                <input class="green_text" type="text" name="email">
+                <label>Your password:</label>
+                <input class="green_text" type="password" name="password">
+                <div class="space"></div>
+                <input class="pink_submit" type="submit" value="login" name="login">
+            </form>
+            <form autocomplete="off" th:action="@{/signup}">
+                <input class="pale_submit" type="submit" value="Don't have an account?" name="signup">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
